@@ -8,7 +8,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function prediction() {
+export default function Prediction() {
   return (
     <View>
       <Text>prediction</Text>
