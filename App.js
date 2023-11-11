@@ -18,9 +18,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useState } from "react";
 
 import SignIn from "./screens/SignIn";
-import Home from "./screens/home";
+import Home from "./screens/Home";
 import Prediction from "./screens/Prediction";
 import FuelingHistory from "./screens/FuelingHistory";
 import FuelingEntry from "./screens/FuelingEntry";

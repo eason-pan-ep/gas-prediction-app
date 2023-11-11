@@ -14,7 +14,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function EditFuelingHistory() {
+export default function EditFuelingEntry() {
   return (
     <View>
       <Text>EditFuelingHistory</Text>
