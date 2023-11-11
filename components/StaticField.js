@@ -1,20 +1,16 @@
-// This component contains a label and a value. This can be set to be editable or not.
+// This component contains a label and a value.
 // This component contains the following props:
 // // label - string, the label to display
 // // value - string, the value to display
-// // editable - boolean, whether or not the value is editable
-// // onChange - function, the function to call when the value changes (if editable)
-// // defaultValue - string, the default value to display (if editable)
-// // inputType - string, the type of input to display (if editable)
 // // style - object, additional style to apply to the component
 
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function InlineField({ label, value, editable, style }) {
+export default function StaticField({ label, value, style }) {
   return (
     <View style={[styles.container, style]}>
       <Text style={styles.label}>{label}</Text>

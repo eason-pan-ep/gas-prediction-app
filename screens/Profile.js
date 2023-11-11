@@ -12,7 +12,7 @@ import { View, StyleSheet } from "react-native";
 import React from "react";
 
 import CustomPressable from "../components/CustomPressable";
-import InlineField from "../components/InlineField";
+import StaticField from "../components/StaticField";
 import {
   calculateTotalAmountSpent,
   calculateAverageAmountSpent,
@@ -59,17 +59,17 @@ export default function Profile({ navigation }) {
 
   return (
     <View>
-      <InlineField label="Email" value={user.email} />
-      <InlineField label="Car Model" value={user.carModel} />
-      <InlineField
+      <StaticField label="Email" value={user.email} />
+      <StaticField label="Car Model" value={user.carModel} />
+      <StaticField
         label="Total Amount Spent"
         value={"$" + totalAmountSpent.toFixed(2)}
       />
-      <InlineField
+      <StaticField
         label="Average Price Paid"
         value={"$" + averageAmountSpentPerL.toFixed(2) + "/L"}
       />
-      <InlineField
+      <StaticField
         label="Lowest Price Paid"
         value={"$" + lowestPricePaidPerL.toFixed(2) + "/L"}
       />
