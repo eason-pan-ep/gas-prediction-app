@@ -24,6 +24,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
 import Home from "./screens/Home";
@@ -34,6 +35,8 @@ import EditFuelingEntry from "./screens/EditFuelingEntry";
 import Profile from "./screens/Profile";
 import EditProfile from "./screens/EditProfile";
 import NearbyGasStations from "./screens/NearbyGasStations";
+import { colors } from "./styles/colors";
+import { fontSizes } from "./styles/fontSizes";
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createBottomTabNavigator();
@@ -53,7 +56,7 @@ const AuthStackNavigator = () => {
 // HomeStack -- contains the Home and Prediction screens
 const HomeStackNavigator = () => {
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator screenOptions={stackNavigatorOptions}>
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Prediction" component={Prediction} />
     </HomeStack.Navigator>
@@ -63,7 +66,7 @@ const HomeStackNavigator = () => {
 // FuelingHistoryStack -- contains the Fueling History, Fueling Entry, and Edit Fueling Entry screens
 const FuelingHistoryStackNavigator = () => {
   return (
-    <FuelingHistoryStack.Navigator>
+    <FuelingHistoryStack.Navigator screenOptions={stackNavigatorOptions}>
       <FuelingHistoryStack.Screen
         name="Fueling History"
         component={FuelingHistory}
@@ -83,7 +86,7 @@ const FuelingHistoryStackNavigator = () => {
 // ProfileStack -- contains the Profile and Edit Profile screens
 const ProfileStackNavigator = () => {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator screenOptions={stackNavigatorOptions}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="Edit Profile" component={EditProfile} />
     </ProfileStack.Navigator>
@@ -93,31 +96,49 @@ const ProfileStackNavigator = () => {
 // MainStack -- contains the HomeStack, FuelingHistoryStack, and ProfileStack
 const MainStackNavigator = () => {
   return (
-    <MainStack.Navigator>
+    <MainStack.Navigator screenOptions={tabNavigatorOptions}>
       <MainStack.Screen
         name="Home Stack"
         component={HomeStackNavigator}
         options={{
           title: "Home",
           headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="home" color={color} size={size} />
+          ),
         }}
       />
       <MainStack.Screen
         name="Fueling History Stack"
         component={FuelingHistoryStackNavigator}
         options={{
-          title: "Fueling History",
+          title: "History",
           headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="book" color={color} size={size} />
+          ),
         }}
       />
       <MainStack.Screen
         name="Profile Stack"
         component={ProfileStackNavigator}
-        options={{ title: "Profile", headerShown: false }}
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user" color={color} size={size} />
+          ),
+        }}
       />
       <MainStack.Screen
-        name="Nearby Gas Stations"
+        name="Gas Stations"
         component={NearbyGasStations}
+        options={{
+          headerTitle: "Nearby Gas Stations",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="map-marker" color={color} size={size} />
+          ),
+        }}
       />
     </MainStack.Navigator>
   );
@@ -142,10 +163,52 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+  stackNavigator: {
+    backgroundColor: colors.primaryDark,
+  },
+  stackNavigatorTitle: {
+    color: colors.primaryText,
+    fontSize: fontSizes.extraLarge,
+  },
+  tabNavigator: {
+    backgroundColor: colors.primary,
+    height: 70,
+  },
+  tabNavigatorTitle: {
+    color: colors.primaryText,
+    fontSize: fontSizes.extraLarge,
+  },
+  tabNavigatorLabel: {
+    color: colors.backgroundText,
+    fontSize: fontSizes.normal,
+    marginBottom: 10,
+  },
+  tabNavigatorIcon: {
+    color: colors.backgroundText,
+    fontSize: fontSizes.large,
+  },
+  tabNavigatorHeader: {
+    backgroundColor: colors.primaryDark,
+  },
+  tabNavigatorHeaderTitle: {
+    color: colors.primaryText,
+    fontSize: fontSizes.extraLarge,
   },
 });
+
+const stackNavigatorOptions = {
+  headerStyle: styles.stackNavigator,
+  headerTitleStyle: styles.stackNavigatorTitle,
+  headerTitleAlign: "center",
+};
+
+const tabNavigatorOptions = {
+  tabBarStyle: styles.tabNavigator,
+  tabBarLabelStyle: styles.tabNavigatorLabel,
+  tabBarIconStyle: styles.tabNavigatorIcon,
+  tabBarActiveTintColor: colors.accentDark,
+  tabBarInactiveTintColor: colors.disabledText,
+  headerStyle: styles.tabNavigatorHeader,
+  headerTitleStyle: styles.tabNavigatorHeaderTitle,
+  headerTitleAlign: "center",
+};
