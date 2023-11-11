@@ -1,17 +1,22 @@
 // This is the entry point of the application.
 // This file contains the following:
 // The App component has the following structure:
-//    AuthStack (NavigatorStackContainer)
-//       |- Sign In (Welcome) screen
-//       '- Main Stack (BottomTabNavigator) (requires authentication)
-//          |- Home screen
-//          |- Prediction screen (not accessible from the bottom tab navigator)
-//          |- Fueling History screen
-//          |- Fueling Entry screen (not accessible from the bottom tab navigator)
-//          |- Edit Fueling Entry screen (not accessible from the bottom tab navigator)
-//          |- Profile screen
-//          |- Edit Profile screen (not accessible from the bottom tab navigator)
-//          '- Nearby Gas Stations screen (not accessible from the bottom tab navigator)
+//
+//    Application
+//     |- Not authenticated: AuthStack (NavigatorStackContainer)
+//     |    '- Sign In screen (also used for registration)
+//     '- Authenticated: MainStack (BottomTabNavigator)
+//          |- HomeStack (StackNavigator)
+//          |  |- Home screen
+//          |  |- Prediction screen
+//          |- FuelingHistoryStack (StackNavigator)
+//          |  |- Fueling History screen
+//          |  |- Fueling Entry screen
+//          |  '- Edit Fueling Entry screen
+//          |- ProfileStack (StackNavigator)
+//          |  |- Profile screen
+//          |  '- Edit Profile screen
+//          '- Nearby Gas Stations screen
 
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
@@ -32,58 +37,81 @@ import NearbyGasStations from "./screens/NearbyGasStations";
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createBottomTabNavigator();
+const HomeStack = createNativeStackNavigator();
+const FuelingHistoryStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 
-// Navigation 1: AuthStack
+// AuthStack -- contains the Sign In screen
 const AuthStackNavigator = () => {
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen name="Sign In" component={SignIn} />
-      <AuthStack.Screen name="Main Stack" component={MainStackNavigator} />
     </AuthStack.Navigator>
   );
 };
 
-// Navigation 2: MainStack
+// HomeStack -- contains the Home and Prediction screens
+const HomeStackNavigator = () => {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="Prediction" component={Prediction} />
+    </HomeStack.Navigator>
+  );
+};
+
+// FuelingHistoryStack -- contains the Fueling History, Fueling Entry, and Edit Fueling Entry screens
+const FuelingHistoryStackNavigator = () => {
+  return (
+    <FuelingHistoryStack.Navigator>
+      <FuelingHistoryStack.Screen
+        name="Fueling History"
+        component={FuelingHistory}
+      />
+      <FuelingHistoryStack.Screen
+        name="Fueling Entry"
+        component={FuelingEntry}
+      />
+      <FuelingHistoryStack.Screen
+        name="Edit Fueling Entry"
+        component={EditFuelingEntry}
+      />
+    </FuelingHistoryStack.Navigator>
+  );
+};
+
+// ProfileStack -- contains the Profile and Edit Profile screens
+const ProfileStackNavigator = () => {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="Edit Profile" component={EditProfile} />
+    </ProfileStack.Navigator>
+  );
+};
+
+// MainStack -- contains the HomeStack, FuelingHistoryStack, and ProfileStack
 const MainStackNavigator = () => {
   return (
     <MainStack.Navigator>
-      <MainStack.Screen name="Home" component={Home} />
       <MainStack.Screen
-        name="Prediction"
-        component={Prediction}
-        options={{
-          tabBarShowLabel: false,
-        }}
-      />
-      <MainStack.Screen name="Fueling History" component={FuelingHistory} />
-      <MainStack.Screen
-        name="Fueling Entry"
-        component={FuelingEntry}
-        options={{
-          tabBarShowLabel: false,
-        }}
+        name="HomeStack"
+        component={HomeStackNavigator}
+        options={{ headerShown: false }}
       />
       <MainStack.Screen
-        name="Edit Fueling Entry"
-        component={EditFuelingEntry}
-        options={{
-          tabBarShowLabel: false,
-        }}
+        name="Fueling History Stack"
+        component={FuelingHistoryStackNavigator}
+        options={{ headerShown: false }}
       />
-      <MainStack.Screen name="Profile" component={Profile} />
       <MainStack.Screen
-        name="Edit Profile"
-        component={EditProfile}
-        options={{
-          tabBarShowLabel: false,
-        }}
+        name="Profile Stack"
+        component={ProfileStackNavigator}
+        options={{ headerShown: false }}
       />
       <MainStack.Screen
         name="Nearby Gas Stations"
         component={NearbyGasStations}
-        options={{
-          tabBarShowLabel: false,
-        }}
       />
     </MainStack.Navigator>
   );
