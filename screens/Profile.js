@@ -8,13 +8,21 @@
 // This screen contains 1 button:
 // // 1. Edit - navigates to the Edit Profile screen.
 
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, StyleSheet } from "react-native";
+import React from "react";
 
-export default function Profile() {
+import CustomPressable from "../components/CustomPressable";
+
+export default function Profile({ navigation }) {
+  // This function is called when the Edit button is pressed.
+  // This function should navigate to the Edit Profile screen.
+  function onPressEdit() {
+    navigation.navigate("Edit Profile");
+  }
+
   return (
     <View>
-      <Text>Profile</Text>
+      <CustomPressable title="Edit" onPress={onPressEdit} />
     </View>
-  )
+  );
 }

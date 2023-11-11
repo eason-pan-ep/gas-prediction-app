@@ -95,19 +95,25 @@ const MainStackNavigator = () => {
   return (
     <MainStack.Navigator>
       <MainStack.Screen
-        name="HomeStack"
+        name="Home Stack"
         component={HomeStackNavigator}
-        options={{ headerShown: false }}
+        options={{
+          title: "Home",
+          headerShown: false,
+        }}
       />
       <MainStack.Screen
         name="Fueling History Stack"
         component={FuelingHistoryStackNavigator}
-        options={{ headerShown: false }}
+        options={{
+          title: "Fueling History",
+          headerShown: false,
+        }}
       />
       <MainStack.Screen
         name="Profile Stack"
         component={ProfileStackNavigator}
-        options={{ headerShown: false }}
+        options={{ title: "Profile", headerShown: false }}
       />
       <MainStack.Screen
         name="Nearby Gas Stations"
@@ -119,7 +125,7 @@ const MainStackNavigator = () => {
 
 export default function App() {
   // *********************************
-  // Set to true for testing purposes.
+  // Temporarily set to true for testing purposes.
   // *********************************
   const [authenticated, setAuthenticated] = useState(true);
 
