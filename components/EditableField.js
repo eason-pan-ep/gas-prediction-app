@@ -14,9 +14,10 @@ import { fontSizes } from "../styles/fontSizes";
 
 export default function EditableField({
   label,
-  onChange,
+  onChangeText,
   defaultValue,
   inputType,
+  isPassword,
   style,
 }) {
   return (
@@ -24,9 +25,10 @@ export default function EditableField({
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={styles.field}
-        onChangeText={onChange}
-        defaultValue={defaultValue}
+        onChangeText={onChangeText}
+        placeholder={defaultValue}
         keyboardType={inputType}
+        secureTextEntry={isPassword}
       />
     </View>
   );
@@ -47,5 +49,6 @@ const styles = StyleSheet.create({
   field: {
     color: colors.backgroundText,
     fontSize: fontSizes.normal,
+    width: '100%',
   },
 });
