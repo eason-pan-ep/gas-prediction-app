@@ -25,6 +25,7 @@ import { auth } from '../firebase/firebaseSetup';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { colors } from '../styles/colors';
+import { fontSizes } from '../styles/fontSizes';
 
 
 
@@ -34,6 +35,9 @@ const SignUp = ({navigation}) => {
         email: "",
         password: "",
         confirmPassword: "",
+        carMake: "",
+        carModel: "",
+        gasType: 87,
         isChecked: false,
     });
 
@@ -46,6 +50,12 @@ const SignUp = ({navigation}) => {
     };
     const handleConfirmPasswordChange = (text) => {
         setSignUpInfo({ ...signUpInfo, confirmPassword: text });
+    };
+    const handleCarMakeChange = (text) => {
+        setSignUpInfo({ ...signUpInfo, carMake: text });
+    };
+    const handleCarModelChange = (text) => {
+        setSignUpInfo({ ...signUpInfo, carModel: text });
     };
 
     //function for handling checkbox changes
@@ -75,6 +85,9 @@ const SignUp = ({navigation}) => {
                 email: "",
                 password: "",
                 confirmPassword: "",
+                carMake: "",
+                carModel: "",
+                gasType: 87,
                 isChecked: false,
             }); 
         }catch(error){ //catch any errors and alert the user
@@ -109,19 +122,31 @@ const SignUp = ({navigation}) => {
             <Image style={styles.logo} source={require('../assets/icon.png')} />
             {/* input for email */}
             <EditableField 
-                label={"Email"} onChangeText={handleEmailChange} defaultValue={"sample@oo.com"}
+                label={"Email*"} onChangeText={handleEmailChange} defaultValue={"sample@oo.com"}
                 inputType={'email-address'} isPassword={false}
             />
             {/* input for password */}
             <EditableField 
-                label={"Password"} onChangeText={handlePasswordChange} defaultValue={"password"}
+                label={"Password*"} onChangeText={handlePasswordChange} defaultValue={"password"}
                 inputType={'default'} isPassword={true}
             />
             {/* input for confirm password */}
             <EditableField 
-                label={"Confirm Password"} onChangeText={handleConfirmPasswordChange} defaultValue={"password"}
+                label={"Confirm Password*"} onChangeText={handleConfirmPasswordChange} defaultValue={"password"}
                 inputType={'default'} isPassword={true}
             />
+            {/* input for car make */}
+            <EditableField 
+                label={"Car Make"} onChangeText={handleCarMakeChange} defaultValue={"Tesla"}
+                inputType={'default'} isPassword={false}
+            />
+            {/* input for car model */}
+            <EditableField 
+                label={"Car Model"} onChangeText={handleCarModelChange} defaultValue={"Model X"}
+                inputType={'default'} isPassword={false}
+            />
+            <Text style={styles.infoReminder}>Fields with * are required for a successful account registration</Text>
+
 
             {/* checkbox for terms and conditions */}
             <View style={styles.checkBoxContainer}>
@@ -168,5 +193,13 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: '8%',
         marginBottom: '8%',
+    },
+    infoReminder:{
+        fontSize: fontSizes.small,
+        width: '95%',
+        alignSelf: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+        color: colors.accentText,
     },
 });
