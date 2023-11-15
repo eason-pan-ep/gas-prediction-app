@@ -1,14 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+// SignUp Account Screen:
+// // This screen is shown by default when the app is opened if the user is not logged in.
+// // This screen contains 1 logo image:
+// // // logo of the app
+// // This screen contains 3 EditableField components:
+// // // email address
+// // // password
+// // // confirm password
+// // This screen contains 1 checkbox:
+// // // terms and conditions
+// // This screen contains 2 buttons:
+// // // 1. Sign Up - creates a new account.
+// // // 2. Already have an account? Sign in here. - navigates to the Sign In screen.
+//
+
+import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState } from 'react';
+
 import EditableField from '../components/EditableField';
-import { fontSizes } from '../styles/fontSizes';
-import { colors } from '../styles/colors';
-import { useState } from 'react';
 import CustomPressable from '../components/CustomPressable';
 import SubtlePressable from '../components/SubtlePressable';
 import Checkbox from 'expo-checkbox';
+
 import { auth } from '../firebase/firebaseSetup';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import { colors } from '../styles/colors';
+
+
 
 const SignUp = ({navigation}) => {
     //state variables for storing user input
@@ -87,6 +105,8 @@ const SignUp = ({navigation}) => {
     //main render
     return (
         <View style={styles.container}>
+            {/* logo image */}
+            <Image style={styles.logo} source={require('../assets/icon.png')} />
             {/* input for email */}
             <EditableField 
                 label={"Email"} onChangeText={handleEmailChange} defaultValue={"sample@oo.com"}
@@ -141,5 +161,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
+    },
+    logo: {
+        width: '30%',
+        height: '15%',
+        alignSelf: 'center',
+        marginTop: '8%',
+        marginBottom: '8%',
     },
 });
