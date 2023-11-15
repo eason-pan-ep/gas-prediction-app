@@ -7,6 +7,8 @@ import { useState } from 'react';
 import CustomPressable from '../components/CustomPressable';
 import SubtlePressable from '../components/SubtlePressable';
 import Checkbox from 'expo-checkbox';
+import { auth } from '../firebase/firebaseSetup';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUp = ({navigation}) => {
     //state variables for storing user input
@@ -34,8 +36,49 @@ const SignUp = ({navigation}) => {
     };
 
     //function for handling sign up button press
-    const handleSignUpPress = () => {
-        console.log("Sign Up Pressed");
+    const handleSignUpPress = async () => {
+        if(signUpInfo.email === "" || signUpInfo.password === "" || signUpInfo.confirmPassword === ""){ //check if any of the fields are empty
+            alert("Please fill in all fields");
+            return;
+        }
+        if(signUpInfo.password !== signUpInfo.confirmPassword){ //check if passwords match
+            alert("Passwords do not match");
+            return;
+        }
+        if(!signUpInfo.isChecked){ //check if terms and conditions are agreed to
+            alert("Please agree to the terms and conditions");
+            return;
+        }
+        
+        try{ //try to create the user
+            const userCredential = await createUserWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
+            console.log("user created: ", userCredential);
+            setSignUpInfo({ //reset the state variables to empty
+                email: "",
+                password: "",
+                confirmPassword: "",
+                isChecked: false,
+            }); 
+        }catch(error){ //catch any errors and alert the user
+            if(error.code === "auth/weak-password"){
+                alert("Password should be at least 6 characters.");
+                return;
+            }
+            if(error.code === "auth/invalid-email"){
+                alert("Please enter a valid email address.");
+                return;
+            }
+            if(error.code === "auth/email-already-in-use"){
+                alert("Email address already in use, please use another one.");
+                return;
+            }
+            console.log("error creating user: ", typeof(error.code), error.code);
+            alert(error.code);
+            return;
+            
+            
+
+        }
     };
 
     //function for handling sign in press
