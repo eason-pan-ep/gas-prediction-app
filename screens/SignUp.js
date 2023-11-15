@@ -23,6 +23,7 @@ import Checkbox from 'expo-checkbox';
 
 import { auth } from '../firebase/firebaseSetup';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { writeToUserProfile } from '../firebase/firestoreHelper';
 
 import { colors } from '../styles/colors';
 import { fontSizes } from '../styles/fontSizes';
@@ -57,11 +58,29 @@ const SignUp = ({navigation}) => {
     const handleCarModelChange = (text) => {
         setSignUpInfo({ ...signUpInfo, carModel: text });
     };
+    const handleGasTypeChange = (num) => {
+        setSignUpInfo({ ...signUpInfo, gasType: Number(num) });
+    };
 
     //function for handling checkbox changes
     const handleCheckboxChange = () => {
         setSignUpInfo({ ...signUpInfo, isChecked: !signUpInfo.isChecked });
     };
+
+
+
+    //function for pack user data into an object 
+    // and write to firestore userProfiles collection
+    const initialLoadUserProfileData = () => {
+        const data = {
+            carModel: signUpInfo.carMake + " " + signUpInfo.carModel,
+            email: signUpInfo.email,
+            gasType: signUpInfo.gasType,
+        }
+        writeToUserProfile(data);
+    };
+
+
 
     //function for handling sign up button press
     const handleSignUpPress = async () => {
@@ -81,6 +100,7 @@ const SignUp = ({navigation}) => {
         try{ //try to create the user
             const userCredential = await createUserWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
             console.log("user created: ", userCredential);
+            initialLoadUserProfileData(); //write the user data to firestore
             setSignUpInfo({ //reset the state variables to empty
                 email: "",
                 password: "",
@@ -90,7 +110,7 @@ const SignUp = ({navigation}) => {
                 gasType: 87,
                 isChecked: false,
             }); 
-        }catch(error){ //catch any errors and alert the user
+        }catch(error){ //catch common errors and alert the user
             if(error.code === "auth/weak-password"){
                 alert("Password should be at least 6 characters.");
                 return;
@@ -137,13 +157,17 @@ const SignUp = ({navigation}) => {
             />
             {/* input for car make */}
             <EditableField 
-                label={"Car Make"} onChangeText={handleCarMakeChange} defaultValue={"Tesla"}
+                label={"Car Make"} onChangeText={handleCarMakeChange} defaultValue={"Honda"}
                 inputType={'default'} isPassword={false}
             />
             {/* input for car model */}
             <EditableField 
-                label={"Car Model"} onChangeText={handleCarModelChange} defaultValue={"Model X"}
+                label={"Car Model"} onChangeText={handleCarModelChange} defaultValue={"CRV"}
                 inputType={'default'} isPassword={false}
+            />
+            <EditableField 
+                label={"Gas Type"} onChangeText={handleGasTypeChange} defaultValue={"87"}
+                inputType={'numeric'} isPassword={false}
             />
             <Text style={styles.infoReminder}>Fields with * are required for a successful account registration</Text>
 
@@ -155,7 +179,8 @@ const SignUp = ({navigation}) => {
                 <SubtlePressable title={"terms and conditions"} onPress={()=>navigation.navigate("Terms and Conditions")} />
             </View>
             
-
+            
+            {/* buttons for sign up and sign in */}
             <View style={styles.buttonContainer}>
                 <CustomPressable 
                     title={"Sign Up"}
