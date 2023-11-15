@@ -28,6 +28,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
+import TermsAndConditions from "./screens/TermsAndConditions";
 import Home from "./screens/Home";
 import Prediction from "./screens/Prediction";
 import FuelingHistory from "./screens/FuelingHistory";
@@ -54,6 +55,7 @@ const AuthStackNavigator = () => {
     <AuthStack.Navigator>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
+      <AuthStack.Screen name="Terms and Conditions" component={TermsAndConditions} />
     </AuthStack.Navigator>
   );
 };

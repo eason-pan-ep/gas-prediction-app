@@ -75,9 +75,6 @@ const SignUp = ({navigation}) => {
             console.log("error creating user: ", typeof(error.code), error.code);
             alert(error.code);
             return;
-            
-            
-
         }
     };
 
@@ -110,7 +107,7 @@ const SignUp = ({navigation}) => {
             <View style={styles.checkBoxContainer}>
                 <Checkbox color={colors.primary} value={signUpInfo.isChecked} onValueChange={handleCheckboxChange} />
                 <Text> Agree on </Text>
-                <SubtlePressable title={"terms and conditions"} onPress={null} />
+                <SubtlePressable title={"terms and conditions"} onPress={()=>navigation.navigate("Terms and Conditions")} />
             </View>
             
 
