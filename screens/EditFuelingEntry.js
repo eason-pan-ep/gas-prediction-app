@@ -4,11 +4,12 @@
 // // amount of fuel purchased
 // // gas price per L
 // // photo of odometer (if available)
-// This screen contains 4 buttons:
+// This screen contains 5 buttons:
 // // 1. Remove Photo - removes the photo of the odometer (if available).
 // // 2. Take Photo - takes a photo of the odometer.
 // // 3. Save - saves the changes and navigates to the Fueling Entry screen (with confirmation message).
 // // 4. Cancel - discards the changes and navigates to the Fueling Entry screen.
+// // 5. Delete - deletes the fueling entry (with confirmation message).
 // Receive the fueling entry data as route params.
 // It contains the following information:
 // // date of fueling
@@ -20,32 +21,45 @@
 //
 
 
-import { View, Text } from 'react-native'
+import { View, Alert } from 'react-native'
 import React, { useState } from 'react'
 
 import CustomPressable from '../components/CustomPressable';
 import EditableField from '../components/EditableField';
 import DatePicker from '../components/DatePicker';
 
-import { writeToFuelingHistory } from '../firebase/firestoreHelper';
+import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
 
 
 
 export default function EditFuelingEntry({ navigation, route }) {
+  // Function to check if this is a new fueling entry
+  const checkIsNewEntry = () => {
+    try{
+      const test = route.params.fuelingEntryData;
+      return false;
+    }catch(error){
+      return true;
+    }
+  };
+  // flag for storing whether this is a new fueling entry 
+  const isNewEntry = checkIsNewEntry();
+
+
   // Function to initialize the data for the fueling entry
   // If the route params contains a fueling entry data, then initialize with given data.
   // Otherwise, this is a new fueling entry.
   const initializeData = () => {
     let fuelingEntryData = null;
     try{
+      const passedData = route.params.fuelingEntryData;
       fuelingEntryData = {
-        date: route.params.fuelingEntryData.date,
-        amount: route.params.fuelingEntryData.amount,
-        price: route.params.fuelingEntryData.price,
-        city: route.params.fuelingEntryData.city,
-        photoRef: route.params.fuelingEntryData.photoRef,
+        date: passedData.date,
+        amount: passedData.amount,
+        price: passedData.price,
+        city: passedData.city,
+        photoRef: passedData.photoRef,
       };
-      setIsNewEntry(false);
     }catch(error){
       fuelingEntryData = {
         date: "",
@@ -57,11 +71,9 @@ export default function EditFuelingEntry({ navigation, route }) {
     }
     return fuelingEntryData;
   };
-  
-  
   // state variable for storing the fueling entry information
   const[entryInfo, setEntryInfo] = useState(initializeData());
-  const[isNewEntry, setIsNewEntry] = useState(true);
+  
 
   // function for handling date changes
   const handleDateChange = (date) => {
@@ -89,6 +101,7 @@ export default function EditFuelingEntry({ navigation, route }) {
     navigation.goBack();
   };
 
+
   // function for handling save button press
   const handleSavePress = () => {
     //check if there is any empty field
@@ -100,11 +113,36 @@ export default function EditFuelingEntry({ navigation, route }) {
     if(isNewEntry){
       //write to Firestore fuelingHistory collection
       writeToFuelingHistory(entryInfo);
+    }else{
+      //update the existing entry in Firestore fuelingHistory collection
+      updateFuelingHistory(entryInfo, route.params.fuelingEntryData.docID);
     }
-    
     //navigate to where the user came from
-    navigation.goBack();
+    navigation.navigate("Fueling History");
   };
+
+
+  // function for handling delete button press
+  const handleDeletePress = () => {
+    //confirm the deletion
+    Alert.alert("Confirm to Delete", "Are you sure you want to delete this fueling entry?\n This data CANNOT be recovered afterwards.", [
+      { // if the user cancels, do nothing
+        text: "Cancel",
+        onPress: null,
+        style: "cancel"
+      },
+      { // if the user confirms, delete the fueling entry from the database and navigate to the Fueling History screen
+        text: "Delete",
+        onPress: () => {
+          deleteFromFuelingHistory(route.params.fuelingEntryData.docID);
+          navigation.navigate("Fueling History");
+        },
+        style: "destructive"
+      }
+    ]);
+  };
+
+
 
   // The main render
   return (
@@ -132,6 +170,8 @@ export default function EditFuelingEntry({ navigation, route }) {
       <CustomPressable title="Save" onPress={handleSavePress} />
       {/* button for canceling changes */}
       <CustomPressable title="Cancel" onPress={handleCancelPress} />
+      {/* button for delete the current entry */}
+      {!isNewEntry&&<CustomPressable title="Delete" onPress={handleDeletePress} />}
     </View>
   )
 }

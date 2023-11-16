@@ -2,7 +2,7 @@
 // It contains functions that are used to access the firestore database.
 
 import { database, auth } from "./firebaseSetup";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 
 // This function writes the user profile data to the userProfiles collection in the database.
@@ -46,5 +46,31 @@ export const writeToFuelingHistory = async (data) => {
         const docRef = await addDoc(collection(database, "fuelingHistory"), newData);
     }catch(error){
         console.log("Error writing to fueling history data collection: ", error);
+    }
+}
+
+// This function updates the fueling data in the fuelingHistory collection in the database.
+// It takes in 2 parameters:
+// // 1. data - the data to be updated
+// // 2. docID - the document id of the document to be updated
+export const updateFuelingHistory = async (data, docID) => {
+    const docRef = doc(database, "fuelingHistory", docID);
+    try{
+        const newData = {...data, user: auth.currentUser.uid};
+        await updateDoc(docRef, newData);
+    }catch(error){
+        console.log("Error updating fueling history data: ", error);
+    }
+};
+
+// This function deletes the fueling data in the fuelingHistory collection in the database.
+// It takes in 1 parameter:
+// // 1. docID - the document id of the document to be deleted
+export const deleteFromFuelingHistory = async (docID) => {
+    const docRef = doc(database, "fuelingHistory", docID);
+    try{
+        await deleteDoc(docRef);
+    }catch(error){
+        console.log("Error deleting fueling history data: ", error);
     }
 }
