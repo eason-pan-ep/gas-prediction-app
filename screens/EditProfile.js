@@ -60,31 +60,29 @@ export default function EditProfile({route, navigation}) {
   // The main render
   return (
     <View>
+      {/* input for email  */}
       <EditableField label={"Email"} onChangeText={handleEmailChange}
         defaultValue={editProfileInfo.email} inputType={'email-address'} isPassword={false}
       />
+      {/* input for car make */}
       <EditableField label={"Car Make"} onChangeText={handleCarMakeChange}
         defaultValue={editProfileInfo.carMake} inputType={'default'} isPassword={false}
       />
+      {/* input for car model */}
       <EditableField label={"Car Model"} onChangeText={handleCarModelChange}
         defaultValue={editProfileInfo.carModel} inputType={'default'} isPassword={false}
       />
+      {/* input for gas type */}
       <EditableField label={"Gas Type"} onChangeText={handleGasTypeChange}
-        defaultValue={String(editProfileInfo.gasType)} inputType={'default'} isPassword={false}
+        defaultValue={String(editProfileInfo.gasType)} inputType={'numeric'} isPassword={false}
       />
 
-      <View style={styles.buttonContainer}>
-        <CustomPressable title={"Cancel"} onPress={handleCancelPress} />
-        <CustomPressable title={"   Save   "} onPress={handleSavePress} />
-      </View>
+      
+      <CustomPressable title={"Cancel"} onPress={handleCancelPress} />
+      <CustomPressable title={"Save"} onPress={handleSavePress} />
+      
       
     </View>
   );
 }
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "95%",
-  },
-});
+const styles = StyleSheet.create({});

@@ -1,7 +1,15 @@
 // This is the Change Passwords screen. It is used to change the user's password.
+// // // It contains 2 buttons:
+// // // // 1. Change Password - changes the user's password.
+// // // // 2. Cancel - navigates to the Profile screen.
+// // // It contains 3 input fields:
+// // // // 1. Current Password
+// // // // 2. New Password
+// // // // 3. Confirm Password
+// //
 
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 
 import CustomPressable from '../components/CustomPressable';
