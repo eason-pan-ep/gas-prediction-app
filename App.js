@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   },
   tabNavigator: {
     backgroundColor: colors.primary,
-    height: 70,
+    height: '11%',
   },
   tabNavigatorTitle: {
     color: colors.primaryText,
