@@ -17,16 +17,29 @@ import { useNavigation } from '@react-navigation/native';
 import { colors } from '../styles/colors';
 import { fontSizes } from '../styles/fontSizes';
 
+
+
 const ListItem = ({ fuelingEntryData }) => {
+    // destructure the fueling entry data for display
     const { date, price, amount } = fuelingEntryData;
     const navigation = useNavigation();
-  return (
-        <Pressable style={styles.container} onPress={null} >
-            <Text style={styles.infoText}>{date}</Text>
-            <Text style={styles.infoText}>${price}/L</Text>
-            <Text style={styles.infoText}>{amount}L</Text>
-        </Pressable>
-  );
+
+    // function for handling on press of the fueling entry
+    const onPressFuelingEntry = () => {
+        // navigate to the Fueling Entry screen with the fueling entry data as route params
+        navigation.navigate("Fueling Entry", { fuelingEntryData: fuelingEntryData });
+    };
+
+
+    // The main render
+    return (
+            <Pressable style={styles.container} onPress={onPressFuelingEntry} >
+                <Text style={styles.infoText}>{date}</Text>
+                <Text style={styles.infoText}>$ {price} / L</Text>
+                <Text style={styles.infoText}>{amount} L</Text>
+                <Text style={styles.infoText}>$ {Math.round((price * amount) * 100) / 100}</Text>
+            </Pressable>
+    );
 };
 
 export default ListItem;
@@ -35,6 +48,8 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: '2.5%',
         marginRight: '2.5%',
+        paddingLeft: '2.5%',
+        paddingRight: '2.5%',
         marginTop: 4,
         marginBottom: 4,
         flexDirection: 'row',
@@ -46,8 +61,6 @@ const styles = StyleSheet.create({
     },
     infoText: {
         fontSize: fontSizes.normal,
-        paddingLeft: '5%',
-        paddingRight: '5%',
         color: colors.infoText,
     },
 });

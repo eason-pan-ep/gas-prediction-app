@@ -48,6 +48,8 @@ export default function FuelingHistory({ navigation }) {
           const fuelingEntryData = {...doc.data(), docID: doc.id}
           updatedData.push(fuelingEntryData);
         });
+        //sort the list by date and set the state variable
+        updatedData.sort((a, b) => (a.date > b.date) ? -1 : 1);
         setFuelingList(updatedData);
       },
       (error) => {
