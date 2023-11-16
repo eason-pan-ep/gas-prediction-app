@@ -8,13 +8,13 @@
 // This screen contains 1 button:
 // // 1. Edit - navigates to the Edit Fueling Entry screen.
 
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from 'react-native';
+import React from 'react';
 
 export default function FuelingEntry() {
   return (
     <View>
       <Text>FuelingEntry</Text>
     </View>
-  )
-}
+  );
+};

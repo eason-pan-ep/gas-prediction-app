@@ -67,6 +67,7 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator screenOptions={stackNavigatorOptions}>
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Prediction" component={Prediction} />
+      <HomeStack.Screen name="Edit Fueling Entry" component={EditFuelingEntry} />
     </HomeStack.Navigator>
   );
 };

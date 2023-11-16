@@ -8,13 +8,28 @@
 // This screen contains 1 button (on the header):
 // // 1. "+" - navigate to the Add a Fueling Entry screen.
 
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList } from 'react-native'
+import React, { useState } from 'react'
 
-export default function FuelingHistory() {
+import CustomPressable from '../components/CustomPressable'
+
+export default function FuelingHistory({navigation}) {
+  const [fuelingList, setFuelingList] = useState([]);
+
+  //Function to handle on press of the add fueling entry button
+  function onPressAddFuelingEntry(){
+    //Navigate to the Add a Fueling Entry screen
+    navigation.navigate("Edit Fueling Entry");
+  }
+
+
+  // The main render
   return (
     <View>
-      <Text>FuelingHistory</Text>
+      <CustomPressable title="Add a Fueling Entry" onPress={onPressAddFuelingEntry} />
+      <FlatList 
+
+      />
     </View>
   )
 }
