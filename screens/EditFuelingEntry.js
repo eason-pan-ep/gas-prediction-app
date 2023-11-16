@@ -9,6 +9,15 @@
 // // 2. Take Photo - takes a photo of the odometer.
 // // 3. Save - saves the changes and navigates to the Fueling Entry screen (with confirmation message).
 // // 4. Cancel - discards the changes and navigates to the Fueling Entry screen.
+// Receive the fueling entry data as route params.
+// It contains the following information:
+// // date of fueling
+// // amount of fuel purchased
+// // gas price per L
+// // photo of odometer (if available)
+// // city of fueling
+// // docID of the fueling entry
+//
 
 
 import { View, Text } from 'react-native'
@@ -36,6 +45,7 @@ export default function EditFuelingEntry({ navigation, route }) {
         city: route.params.fuelingEntryData.city,
         photoRef: route.params.fuelingEntryData.photoRef,
       };
+      setIsNewEntry(false);
     }catch(error){
       fuelingEntryData = {
         date: "",
@@ -51,6 +61,7 @@ export default function EditFuelingEntry({ navigation, route }) {
   
   // state variable for storing the fueling entry information
   const[entryInfo, setEntryInfo] = useState(initializeData());
+  const[isNewEntry, setIsNewEntry] = useState(true);
 
   // function for handling date changes
   const handleDateChange = (date) => {
@@ -86,8 +97,11 @@ export default function EditFuelingEntry({ navigation, route }) {
       alert("Please fill in all fields.");
       return;
     }
-    //write to Firestore fuelingHistory collection
-    writeToFuelingHistory(entryInfo);
+    if(isNewEntry){
+      //write to Firestore fuelingHistory collection
+      writeToFuelingHistory(entryInfo);
+    }
+    
     //navigate to where the user came from
     navigation.goBack();
   };
