@@ -165,6 +165,7 @@ const SignUp = ({navigation}) => {
                 label={"Car Model"} onChangeText={handleCarModelChange} defaultValue={"CRV"}
                 inputType={'default'} isPassword={false}
             />
+            {/* input for gas type */}
             <EditableField 
                 label={"Gas Type"} onChangeText={handleGasTypeChange} defaultValue={"87"}
                 inputType={'numeric'} isPassword={false}

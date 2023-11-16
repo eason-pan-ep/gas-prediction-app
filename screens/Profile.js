@@ -9,7 +9,10 @@
 // // 1. Edit - navigates to the Edit Profile screen.
 
 import { View, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { auth, database } from "../firebase/firebaseSetup";
 
 import CustomPressable from "../components/CustomPressable";
 import StaticField from "../components/StaticField";
@@ -20,12 +23,38 @@ import {
 } from "../utility/fuelingStatCalculation";
 
 export default function Profile({ navigation }) {
-  // For testing purposes, the user's profile information is hardcoded.
-  const user = {
-    email: "johndoe@gmail.com",
-    carModel: "Honda Civic",
-    history: userFuelingHistory,
-  };
+  // state variables for storing user profile information fetched from the database
+  const [userProfile, setUserProfile] = useState({
+    email: "",
+    carModel: "",
+    gasType: "",
+    docID: "",
+  });
+
+  // user profile data change listener
+  useEffect(() => {
+    try{
+      // get the user profile data matches current uid from the database
+      const q = query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid));
+      // listen for changes to the user profile data
+      onSnapshot(q, querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          // store the user profile data in the state variable
+          const useProfileData = doc.data();
+          setUserProfile({
+            email: useProfileData.email,
+            carModel: useProfileData.carModel,
+            gasType: useProfileData.gasType,
+            docID: doc.id,
+          });
+        });
+      });
+    }catch(error){
+      console.log("Error getting user profile data: ", error);
+    } 
+  }, [navigation]);
+
+  // This is a dummy fueling history for testing purposes.
   const userFuelingHistory = [
     {
       date: "2023-11-01",
@@ -59,8 +88,9 @@ export default function Profile({ navigation }) {
 
   return (
     <View>
-      <StaticField label="Email" value={user.email} />
-      <StaticField label="Car Model" value={user.carModel} />
+      <StaticField label="Email" value={userProfile.email} />
+      <StaticField label="Car Model" value={userProfile.carModel} />
+      <StaticField label="Gas Type" value={userProfile.gasType} />
       <StaticField
         label="Total Amount Spent"
         value={"$" + totalAmountSpent.toFixed(2)}
