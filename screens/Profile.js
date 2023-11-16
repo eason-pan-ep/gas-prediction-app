@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { auth, database } from "../firebase/firebaseSetup";
+import { onAuthStateChanged } from "firebase/auth";
 
 import CustomPressable from "../components/CustomPressable";
 import StaticField from "../components/StaticField";
@@ -34,31 +35,34 @@ export default function Profile({ navigation }) {
 
   // user profile data change listener
   useEffect(() => {
-    if(!auth.currentUser) {return;}
-      // listen for changes to the user profile data
-      const userProfileListener = onSnapshot(
-        // get the user profile data matches current uid from the database
-        query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid)),
-        (snapshot) => {
-          snapshot.forEach((doc) => {
-            // store the user profile data in the state variable
-            const useProfileData = doc.data();
-            setUserProfile({
-              email: useProfileData.email,
-              carMake: useProfileData.carMake,
-              carModel: useProfileData.carModel,
-              gasType: useProfileData.gasType,
-              docID: doc.id,
-            });
-            userProfileListener();
+    // if the user is not logged in, unsubscribe from the listener
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        userProfileListener();
+      }
+    });
+    // listen for changes to the user profile data
+    const userProfileListener = onSnapshot(
+      // get the user profile data matches current uid from the database
+      query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid)),
+      (snapshot) => {
+        snapshot.forEach((doc) => {
+          // store the user profile data in the state variable
+          const useProfileData = doc.data();
+          setUserProfile({
+            email: useProfileData.email,
+            carMake: useProfileData.carMake,
+            carModel: useProfileData.carModel,
+            gasType: useProfileData.gasType,
+            docID: doc.id,
           });
-        },
-        (error) => {
-          console.log("Error getting user profile data: ", error);
         });
-        
-
+      },
+      (error) => {
+        console.log("Error getting user profile data: ", error);
+      });
   }, [navigation]);
+
 
   // This is a dummy fueling history for testing purposes.
   const userFuelingHistory = [
