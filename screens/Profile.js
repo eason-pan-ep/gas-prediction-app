@@ -2,6 +2,7 @@
 // This screen contains the user's profile information:
 // // email address
 // // car make / model
+// // gas type
 // // total money spent on gas
 // // average money spent on gas per L
 // // lowest gas price paid per L

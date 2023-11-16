@@ -1,7 +1,6 @@
 // This screen allows the user to edit their profile information.
 // This screen contains the user's profile information which are editable:
 // // email address (contact email, not the account)
-// // password (not implemented yet)
 // // car make 
 // // car model
 // // gas type
