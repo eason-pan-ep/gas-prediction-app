@@ -67,12 +67,12 @@ export default function SignIn() {
       <Image style={styles.logo} source={require('../assets/icon.png')} />
       {/* input for email */}
       <EditableField  
-        label={"Email"} onChangeText={handleEmailChange} defaultValue={"sample@oo.com"}
+        label={"Email"} onChangeText={handleEmailChange} placeholder={"sample@oo.com"}
         inputType={'email-address'} isPassword={false}
       />
       {/* input for password */}
       <EditableField  
-        label={"Password"} onChangeText={handlePasswordChange} defaultValue={"password"}
+        label={"Password"} onChangeText={handlePasswordChange} placeholder={"password"}
         inputType={'default'} isPassword={true}
       />
       {/* button for sign in */}

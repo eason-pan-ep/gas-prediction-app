@@ -26,6 +26,7 @@ export default function Profile({ navigation }) {
   // state variables for storing user profile information fetched from the database
   const [userProfile, setUserProfile] = useState({
     email: "",
+    carMake: "",
     carModel: "",
     gasType: "",
     docID: "",
@@ -33,25 +34,30 @@ export default function Profile({ navigation }) {
 
   // user profile data change listener
   useEffect(() => {
-    try{
-      // get the user profile data matches current uid from the database
-      const q = query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid));
+    if(!auth.currentUser) {return;}
       // listen for changes to the user profile data
-      onSnapshot(q, querySnapshot => {
-        querySnapshot.forEach((doc) => {
-          // store the user profile data in the state variable
-          const useProfileData = doc.data();
-          setUserProfile({
-            email: useProfileData.email,
-            carModel: useProfileData.carModel,
-            gasType: useProfileData.gasType,
-            docID: doc.id,
+      const userProfileListener = onSnapshot(
+        // get the user profile data matches current uid from the database
+        query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid)),
+        (snapshot) => {
+          snapshot.forEach((doc) => {
+            // store the user profile data in the state variable
+            const useProfileData = doc.data();
+            setUserProfile({
+              email: useProfileData.email,
+              carMake: useProfileData.carMake,
+              carModel: useProfileData.carModel,
+              gasType: useProfileData.gasType,
+              docID: doc.id,
+            });
+            userProfileListener();
           });
+        },
+        (error) => {
+          console.log("Error getting user profile data: ", error);
         });
-      });
-    }catch(error){
-      console.log("Error getting user profile data: ", error);
-    } 
+        
+
   }, [navigation]);
 
   // This is a dummy fueling history for testing purposes.
@@ -83,12 +89,15 @@ export default function Profile({ navigation }) {
   // This function is called when the Edit button is pressed.
   // This function should navigate to the Edit Profile screen.
   function onPressEdit() {
-    navigation.navigate("Edit Profile");
+    navigation.navigate("Edit Profile", {
+      userProfileData: userProfile,
+    });
   }
 
   return (
     <View>
       <StaticField label="Email" value={userProfile.email} />
+      <StaticField label="Car Make" value={userProfile.carMake} />
       <StaticField label="Car Model" value={userProfile.carModel} />
       <StaticField label="Gas Type" value={userProfile.gasType} />
       <StaticField

@@ -15,6 +15,7 @@ import { fontSizes } from "../styles/fontSizes";
 export default function EditableField({
   label,
   onChangeText,
+  placeholder,
   defaultValue,
   inputType,
   isPassword,
@@ -26,7 +27,8 @@ export default function EditableField({
       <TextInput
         style={styles.field}
         onChangeText={onChangeText}
-        placeholder={defaultValue}
+        defaultValue={defaultValue}
+        placeholder={placeholder}
         keyboardType={inputType}
         secureTextEntry={isPassword}
       />

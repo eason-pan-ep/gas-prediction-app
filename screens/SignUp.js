@@ -73,7 +73,8 @@ const SignUp = ({navigation}) => {
     // and write to firestore userProfiles collection
     const initialLoadUserProfileData = () => {
         const data = {
-            carModel: signUpInfo.carMake + " " + signUpInfo.carModel,
+            carMake: signUpInfo.carMake,
+            carModel: signUpInfo.carModel,
             email: signUpInfo.email,
             gasType: signUpInfo.gasType,
         }
@@ -99,7 +100,6 @@ const SignUp = ({navigation}) => {
         
         try{ //try to create the user
             const userCredential = await createUserWithEmailAndPassword(auth, signUpInfo.email, signUpInfo.password);
-            console.log("user created: ", userCredential);
             initialLoadUserProfileData(); //write the user data to firestore
             setSignUpInfo({ //reset the state variables to empty
                 email: "",
@@ -142,32 +142,32 @@ const SignUp = ({navigation}) => {
             <Image style={styles.logo} source={require('../assets/icon.png')} />
             {/* input for email */}
             <EditableField 
-                label={"Email*"} onChangeText={handleEmailChange} defaultValue={"sample@oo.com"}
+                label={"Email*"} onChangeText={handleEmailChange} placeholder={"sample@oo.com"}
                 inputType={'email-address'} isPassword={false}
             />
             {/* input for password */}
             <EditableField 
-                label={"Password*"} onChangeText={handlePasswordChange} defaultValue={"password"}
+                label={"Password*"} onChangeText={handlePasswordChange} placeholder={"password"}
                 inputType={'default'} isPassword={true}
             />
             {/* input for confirm password */}
             <EditableField 
-                label={"Confirm Password*"} onChangeText={handleConfirmPasswordChange} defaultValue={"password"}
+                label={"Confirm Password*"} onChangeText={handleConfirmPasswordChange} placeholder={"password"}
                 inputType={'default'} isPassword={true}
             />
             {/* input for car make */}
             <EditableField 
-                label={"Car Make"} onChangeText={handleCarMakeChange} defaultValue={"Honda"}
+                label={"Car Make"} onChangeText={handleCarMakeChange} placeholder={"Honda"}
                 inputType={'default'} isPassword={false}
             />
             {/* input for car model */}
             <EditableField 
-                label={"Car Model"} onChangeText={handleCarModelChange} defaultValue={"CRV"}
+                label={"Car Model"} onChangeText={handleCarModelChange} placeholder={"CRV"}
                 inputType={'default'} isPassword={false}
             />
             {/* input for gas type */}
             <EditableField 
-                label={"Gas Type"} onChangeText={handleGasTypeChange} defaultValue={"87"}
+                label={"Gas Type"} onChangeText={handleGasTypeChange} placeholder={"87"}
                 inputType={'numeric'} isPassword={false}
             />
             <Text style={styles.infoReminder}>Fields with * are required for a successful account registration</Text>
