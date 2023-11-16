@@ -92,12 +92,21 @@ export default function Profile({ navigation }) {
 
   // This function is called when the Edit button is pressed.
   // This function should navigate to the Edit Profile screen.
-  function onPressEdit() {
+  const onPressEdit = () => {
     navigation.navigate("Edit Profile", {
       userProfileData: userProfile,
     });
   }
 
+  // This function is called when the Change Password button is pressed.
+  // This function should navigate to the Change Password screen.
+  const onPressChangePassword = () => {
+    navigation.navigate("Change Password");
+  };
+
+
+
+  // The main render
   return (
     <View>
       <StaticField label="Email" value={userProfile.email} />
@@ -117,6 +126,7 @@ export default function Profile({ navigation }) {
         value={"$" + lowestPricePaidPerL.toFixed(2) + "/L"}
       />
       <CustomPressable title="Edit" onPress={onPressEdit} />
+      <CustomPressable title="Change Password" onPress={onPressChangePassword} />
     </View>
   );
 }

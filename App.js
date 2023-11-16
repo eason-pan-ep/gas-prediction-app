@@ -97,7 +97,7 @@ const ProfileStackNavigator = () => {
     <ProfileStack.Navigator screenOptions={stackNavigatorOptions}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="Edit Profile" component={EditProfile} />
-      <ProfileStack.Screen name="Change Passwords" component={ChangePasswords} />
+      <ProfileStack.Screen name="Change Password" component={ChangePasswords} />
     </ProfileStack.Navigator>
   );
 };
