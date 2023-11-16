@@ -36,6 +36,7 @@ import FuelingEntry from "./screens/FuelingEntry";
 import EditFuelingEntry from "./screens/EditFuelingEntry";
 import Profile from "./screens/Profile";
 import EditProfile from "./screens/EditProfile";
+import ChangePasswords from "./screens/ChangePasswords";
 import NearbyGasStations from "./screens/NearbyGasStations";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSizes";
@@ -96,6 +97,7 @@ const ProfileStackNavigator = () => {
     <ProfileStack.Navigator screenOptions={stackNavigatorOptions}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="Edit Profile" component={EditProfile} />
+      <ProfileStack.Screen name="Change Passwords" component={ChangePasswords} />
     </ProfileStack.Navigator>
   );
 };

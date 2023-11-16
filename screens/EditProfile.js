@@ -1,8 +1,10 @@
 // This screen allows the user to edit their profile information.
 // This screen contains the user's profile information which are editable:
-// // email address
-// // password
-// // car make / model
+// // email address (contact email, not the account)
+// // password (not implemented yet)
+// // car make 
+// // car model
+// // gas type
 // This screen contains 2 button:
 // // 1. Save - saves the changes made to the user's profile information.
 // // 2. Cancel - discards the changes made to the user's profile information.
