@@ -2,7 +2,7 @@
 // It contains functions that are used to access the firestore database.
 
 import { database, auth } from "./firebaseSetup";
-import { addDoc, collection, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
 
 
 // This function writes the user profile data to the userProfiles collection in the database.
@@ -73,4 +73,44 @@ export const deleteFromFuelingHistory = async (docID) => {
     }catch(error){
         console.log("Error deleting fueling history data: ", error);
     }
-}
+};
+
+
+// This function writes the prediction data to the predictionData collection in the database.
+// It takes in 1 parameter:
+// // 1. data - the data to be written
+export const writeToPredictionData = async (data) => {
+    // add the user id to the data object
+    const newData = {...data, user: auth.currentUser.uid};
+    try{
+        // add the data to the predictionData collection
+        const docRef = await addDoc(collection(database, "predictionData"), newData);
+    }catch(error){
+        console.log("Error writing to prediction data collection: ", error);
+    }
+};
+
+// This function clears current user's cache in the prediction collection in the database.
+export const clearUserPredictionCache = async () => {
+    try{
+        const q = query(collection(database, "predictionData"),where("user", "==", auth.currentUser.uid));
+        const querySnapshot = await getDocs(q);
+        let deleteIDs = [];
+        querySnapshot.forEach((doc) => {
+
+            deleteIDs.push(doc.id);
+        });
+        for(let i = 0; i < deleteIDs.length; i++){
+            const docRef = doc(database, "predictionData", deleteIDs[i]);
+            try{
+                await deleteDoc(docRef);
+            }catch(error){
+                console.log("Error deleting prediction data: ", error);
+            }
+            
+        }
+    }catch(error){
+        console.log("Error clearing user prediction cache: ", error);
+    }
+};
+
