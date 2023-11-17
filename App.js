@@ -68,6 +68,7 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Prediction" component={Prediction} />
       <HomeStack.Screen name="Edit Fueling Entry" component={EditFuelingEntry} />
+      <HomeStack.Screen name="Nearby Gas Stations" component={NearbyGasStations} />
     </HomeStack.Navigator>
   );
 };
