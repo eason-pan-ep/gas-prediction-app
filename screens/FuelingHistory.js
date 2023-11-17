@@ -61,7 +61,9 @@ export default function FuelingHistory({ navigation }) {
   // The main render
   return (
     <View>
+      {/* the add new fueling entry button */}
       <CustomPressable title="Add a Fueling Entry" onPress={onPressAddFuelingEntry} />
+      {/* the list of fueling entries */}
       <FlatList 
         data={fuelingList}
         renderItem={(listItem) => (<ListItem fuelingEntryData={listItem.item} /> )}

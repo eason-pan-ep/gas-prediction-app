@@ -90,16 +90,17 @@ export const writeToPredictionData = async (data) => {
     }
 };
 
+
 // This function clears current user's cache in the prediction collection in the database.
 export const clearUserPredictionCache = async () => {
     try{
+        // get all the documents in the predictionData collection that matches the current user
         const q = query(collection(database, "predictionData"),where("user", "==", auth.currentUser.uid));
         const querySnapshot = await getDocs(q);
-        let deleteIDs = [];
         querySnapshot.forEach((doc) => {
-
-            deleteIDs.push(doc.id);
+            deleteIDs.push(doc.id); //store the document ids in an array
         });
+        // delete all the documents in the predictionData collection that matches the current user
         for(let i = 0; i < deleteIDs.length; i++){
             const docRef = doc(database, "predictionData", deleteIDs[i]);
             try{
@@ -107,7 +108,6 @@ export const clearUserPredictionCache = async () => {
             }catch(error){
                 console.log("Error deleting prediction data: ", error);
             }
-            
         }
     }catch(error){
         console.log("Error clearing user prediction cache: ", error);
