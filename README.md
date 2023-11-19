@@ -54,6 +54,40 @@ CRUD operations for 3 collections in Firestore
     - prices: Array[5] -- "today"'s gas price + prediction of the following 4 days
     - user: String -- unique uid for an individual user
 
+### Frontend Development
+Primary Contributor: Macarious
+
+#### App navigation
+- Implement app navigation using `NativeStackNavigator` and `BottomTabNavigator` with the following structure:
+    - Application
+      - Not authenticated: AuthStack (`NativeStackNavigator`)
+        - Sign In screen (also used for registration)
+      - Authenticated: MainStack (`BottomTabNavigato`r)
+        - HomeStack (`NativeStackNavigator`)
+          - Home screen
+          - Prediction screen
+        - FuelingHistoryStack (`NativeStackNavigator`)
+          - Fueling History screen
+          - Fueling Entry screen
+          - Edit Fueling Entry screen
+        - ProfileStack (`NativeStackNavigator`)
+          - Profile screen
+          - Edit Profile screen
+        - Nearby Gas Stations screen
+
+#### Page layouts
+  - Create basic page layout for each screen, incorporating navigation functions and buttons
+  - Some screens include dummy pressables and fields, with the understanding that UI/UX enhancements will be made in subsequent iterations
+  - Create and reuse components such as pressables, input fields, static lists to ensure styling consistency and reduce repetition of code
+  - Basic styling information such as colors and font sizes are saved in a separate file for reuse.
+ 
+#### Fueling history statistics
+  - Implement functions to calculate key statistics on the user's fueling history, including:
+      - total amount spent
+      - average amount spent
+      - lowest price paid
+  - These functions are displayed on the Profile page
+
 ## Screenshots from Iteration #1
 #### Front-end
 ![iteration 1 screens](/ReadMeRes/Iteration_1_screens.png)
