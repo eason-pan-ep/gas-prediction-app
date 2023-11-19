@@ -93,7 +93,7 @@ export const writeToPredictionData = async (data) => {
 
 // This function clears current user's cache in the prediction collection in the database.
 export const clearUserPredictionCache = async () => {
-    let deleteIDs = [];
+    let deleteIDs = []; // store the document ids in an array to be deleted later
     try{
         // get all the documents in the predictionData collection that matches the current user
         const q = query(collection(database, "predictionData"),where("user", "==", auth.currentUser.uid));
