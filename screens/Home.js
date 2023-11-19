@@ -3,8 +3,10 @@
 // // 1. Predict Gas Prices - navigates to the Prediction screen.
 // // 2. Add Fueling Entry - navigates to the Edit Fuelling Entry screen.
 
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import React from "react";
+import { auth } from "../firebase/firebaseSetup";
+import { signOut } from "firebase/auth";
 
 import CustomPressable from "../components/CustomPressable";
 
@@ -21,6 +23,15 @@ export default function Home({ navigation }) {
     navigation.navigate("Edit Fueling Entry");
   }
 
+  //
+  function onPressSignOut() {
+    try{
+      auth.signOut();
+    }catch(error){
+      console.log("error signing out: ", error);
+    }
+  }
+
   return (
     <View>
       <CustomPressable
@@ -31,6 +42,9 @@ export default function Home({ navigation }) {
         title="Add Fueling Entry"
         onPress={onPressAddFuelingEntry}
       />
+
+      {/* for testing purpose only, here is a logout button */}
+      <Button title="Sign Out" onPress={onPressSignOut} />
     </View>
   );
 }

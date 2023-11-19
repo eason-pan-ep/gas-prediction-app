@@ -8,13 +8,66 @@
 // This screen contains 1 button (on the header):
 // // 1. "+" - navigate to the Add a Fueling Entry screen.
 
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
 
-export default function FuelingHistory() {
+import CustomPressable from '../components/CustomPressable';
+import ListItem from '../components/ListItem';
+
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, database } from '../firebase/firebaseSetup';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+
+
+export default function FuelingHistory({ navigation }) {
+  // state variable for storing the user's fueling history data read from the database
+  const [fuelingList, setFuelingList] = useState([]);
+
+  //Function to handle on press of the add fueling entry button
+  function onPressAddFuelingEntry(){
+    //Navigate to the Add a Fueling Entry screen
+    navigation.navigate("Edit Fueling Entry");
+  }
+
+  // Fueling history data change listener
+  useEffect(() => {
+    // if the user is not logged in, unsubscribe from the listener
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        fuelingHistoryListener();
+      }
+    });
+
+    // listen for changes to the fueling history data
+    const fuelingHistoryListener = onSnapshot(
+      query(collection(database, "fuelingHistory"), where("user", "==", auth.currentUser.uid)),
+      (snapshot) => {
+        let updatedData = [];
+        snapshot.forEach((doc) => {
+          // append the fueling entry data to the state variable
+          const fuelingEntryData = {...doc.data(), docID: doc.id}
+          updatedData.push(fuelingEntryData);
+        });
+        //sort the list by date and set the state variable
+        updatedData.sort((a, b) => (a.date > b.date) ? -1 : 1);
+        setFuelingList(updatedData);
+      },
+      (error) => {
+        console.log("Error getting fueling history data: ", error);
+      });
+  }, [navigation])
+
+
+  // The main render
   return (
     <View>
-      <Text>FuelingHistory</Text>
+      {/* the add new fueling entry button */}
+      <CustomPressable title="Add a Fueling Entry" onPress={onPressAddFuelingEntry} />
+      {/* the list of fueling entries */}
+      <FlatList 
+        data={fuelingList}
+        renderItem={(listItem) => (<ListItem fuelingEntryData={listItem.item} /> )}
+      />
     </View>
   )
 }

@@ -1,19 +1,87 @@
 // This screen allows the user to edit their profile information.
 // This screen contains the user's profile information which are editable:
-// // email address
-// // password
-// // car make / model
+// // email address (contact email, not the account)
+// // car make 
+// // car model
+// // gas type
 // This screen contains 2 button:
 // // 1. Save - saves the changes made to the user's profile information.
 // // 2. Cancel - discards the changes made to the user's profile information.
 
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
 
-export default function EditProfile() {
+import EditableField from "../components/EditableField";
+import CustomPressable from "../components/CustomPressable";
+import { updateUserProfile } from "../firebase/firestoreHelper";
+
+export default function EditProfile({route, navigation}) {
+  // destruct the user profile data from the route params
+  const {email, carMake, carModel, gasType, docID} = route.params.userProfileData;
+  // state variable for storing the user profile information
+  const [editProfileInfo, setEditProfileInfo] = useState({
+    email: email,
+    carMake: carMake,
+    carModel: carModel,
+    gasType: gasType,
+  });
+
+  // function for handling email text changes
+  const handleEmailChange = (text) => {
+    setEditProfileInfo({ ...editProfileInfo, email: text });
+  };
+  // function for handling car make text changes
+  const handleCarMakeChange = (text) => {
+    setEditProfileInfo({ ...editProfileInfo, carMake: text });
+  };
+  // function for handling car model text changes
+  const handleCarModelChange = (text) => {
+    setEditProfileInfo({ ...editProfileInfo, carModel: text });
+  };
+  // function for handling gas type text changes
+  const handleGasTypeChange = (text) => {
+    setEditProfileInfo({ ...editProfileInfo, gasType: Number(text) });
+  };
+
+  // function for handling save button press
+  const handleSavePress = () => {
+    updateUserProfile(editProfileInfo, docID);
+    navigation.navigate("Profile");
+  };
+
+  // function for handling cancel button press
+  const handleCancelPress = () => {
+    navigation.goBack();
+  };
+
+
+
+  // The main render
   return (
     <View>
-      <Text>EditProfile</Text>
+      {/* input for email  */}
+      <EditableField label={"Email"} onChangeText={handleEmailChange}
+        defaultValue={editProfileInfo.email} inputType={'email-address'} isPassword={false}
+      />
+      {/* input for car make */}
+      <EditableField label={"Car Make"} onChangeText={handleCarMakeChange}
+        defaultValue={editProfileInfo.carMake} inputType={'default'} isPassword={false}
+      />
+      {/* input for car model */}
+      <EditableField label={"Car Model"} onChangeText={handleCarModelChange}
+        defaultValue={editProfileInfo.carModel} inputType={'default'} isPassword={false}
+      />
+      {/* input for gas type */}
+      <EditableField label={"Gas Type"} onChangeText={handleGasTypeChange}
+        defaultValue={String(editProfileInfo.gasType)} inputType={'numeric'} isPassword={false}
+      />
+
+      
+      <CustomPressable title={"Cancel"} onPress={handleCancelPress} />
+      <CustomPressable title={"Save"} onPress={handleSavePress} />
+      
+      
     </View>
   );
 }
+const styles = StyleSheet.create({});

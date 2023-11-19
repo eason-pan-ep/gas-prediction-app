@@ -23,10 +23,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
+import SignUp from "./screens/SignUp";
+import TermsAndConditions from "./screens/TermsAndConditions";
 import Home from "./screens/Home";
 import Prediction from "./screens/Prediction";
 import FuelingHistory from "./screens/FuelingHistory";
@@ -34,9 +36,13 @@ import FuelingEntry from "./screens/FuelingEntry";
 import EditFuelingEntry from "./screens/EditFuelingEntry";
 import Profile from "./screens/Profile";
 import EditProfile from "./screens/EditProfile";
+import ChangePasswords from "./screens/ChangePasswords";
 import NearbyGasStations from "./screens/NearbyGasStations";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSizes";
+
+import { auth } from './firebase/firebaseSetup';
+import { onAuthStateChanged } from "firebase/auth";
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createBottomTabNavigator();
@@ -48,7 +54,9 @@ const ProfileStack = createNativeStackNavigator();
 const AuthStackNavigator = () => {
   return (
     <AuthStack.Navigator>
+      <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
+      <AuthStack.Screen name="Terms and Conditions" component={TermsAndConditions} />
     </AuthStack.Navigator>
   );
 };
@@ -59,6 +67,8 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator screenOptions={stackNavigatorOptions}>
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Prediction" component={Prediction} />
+      <HomeStack.Screen name="Edit Fueling Entry" component={EditFuelingEntry} />
+      <HomeStack.Screen name="Nearby Gas Stations" component={NearbyGasStations} />
     </HomeStack.Navigator>
   );
 };
@@ -89,6 +99,7 @@ const ProfileStackNavigator = () => {
     <ProfileStack.Navigator screenOptions={stackNavigatorOptions}>
       <ProfileStack.Screen name="Profile" component={Profile} />
       <ProfileStack.Screen name="Edit Profile" component={EditProfile} />
+      <ProfileStack.Screen name="Change Password" component={ChangePasswords} />
     </ProfileStack.Navigator>
   );
 };
@@ -148,11 +159,20 @@ export default function App() {
   // *********************************
   // Temporarily set to true for testing purposes.
   // *********************************
-  const [authenticated, setAuthenticated] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   // *********************************
-  // Add listener for authentication here.
+  // Listener for authentication state changes.
   // *********************************
+  useEffect(() => {
+    onAuthStateChanged(auth, (user)=>{
+      if(user){
+        setAuthenticated(true);
+      }else{
+        setAuthenticated(false);
+      }
+    })
+  },[]);
 
   return (
     <NavigationContainer>
@@ -172,7 +192,7 @@ const styles = StyleSheet.create({
   },
   tabNavigator: {
     backgroundColor: colors.primary,
-    height: 70,
+    height: '11%',
   },
   tabNavigatorTitle: {
     color: colors.primaryText,
