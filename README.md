@@ -46,7 +46,7 @@ CRUD operations for 3 collections in Firestore
     - prices: Array[5] -- "today"'s gas price + prediction of the following 4 days
     - user: String -- unique uid for an individual user
 
-### Screenshots
+## Screenshots from Iteration #1
 #### Front-end
 ![iteration 1 screens](/ReadMeRes/Iteration_1_screens.png)
 
