@@ -1,5 +1,13 @@
 # Gas Prediction App
 Group project for CS5520, fall 2023.
+| App Name | Octane Oracle |
+| --- | --- |
+| App Description | OctaneOracle is the ultimate app for smart and savvy drivers looking to take the guesswork out of filling up their gas tanks. With real-time data and powerful predictive prices, OctaneOracle helps you save money and decide when to fill your gas tank. OctaneOracle also comes with a handy expense tracker to help you manage your budget |
+| Slogan | Your Fuel Future, Revealed |
+| Target users | Gasoline car owners in Canada |
+
+
+
 ## Team Member
 Macarious Kin Fung Hui, Yuchen Pan (Eason)
 
