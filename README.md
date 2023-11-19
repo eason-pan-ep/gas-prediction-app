@@ -53,3 +53,15 @@ CRUD operations for 3 collections in Firestore
 #### Back-end
 ![iteration 1 firebase](/ReadMeRes/Iteration_1_firebase.png)
 
+## Next Steps
+### Iteration II - Device Features and UI Design
+- Firebase storage and camera features
+- Read, parse and store for location data
+- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
+- Start UI design (the production version)
+
+### Iteration III - Prediction Feature and Polish
+- OpenAI API & LangChain Integration
+- Production UI integration 
+- Polish interactions 
+- Test and compile (pack)
