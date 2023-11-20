@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Octan Oracle would like to use your location to provide you with the most accurate gas price predictions."          
+        }
+      ]
+    ],
     "name": "gas-prediction-app",
     "slug": "gas-prediction-app",
     "version": "1.0.0",
