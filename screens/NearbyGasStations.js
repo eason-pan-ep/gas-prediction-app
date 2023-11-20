@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import GetLocationButton from '../components/GetLocationButton';
 import { getLatitude, getLongitude } from '../utility/deviceLocationUtil';
 
+import { googleMapsApiKey } from "@env";
+
 
 export default function NearbyGasStations() {
   const [locationTest, setLocationTest] = useState("");
