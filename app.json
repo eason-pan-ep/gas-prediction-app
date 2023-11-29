@@ -1,5 +1,10 @@
 {
   "expo": {
+    "plugins": [
+      [
+      "expo-image-picker", {
+      "cameraPermission": "The app needs access to your camera." }
+      ] ],
     "name": "gas-prediction-app",
     "slug": "gas-prediction-app",
     "version": "1.0.0",
