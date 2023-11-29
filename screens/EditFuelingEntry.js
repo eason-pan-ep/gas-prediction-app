@@ -156,19 +156,17 @@ export default function EditFuelingEntry({ navigation, route }) {
         await requestPermission();
         console.log("Camera permission requested.");
       }else{
-        try{
-          // if the camera permission is granted, launch the camera
-          const photoRes = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-          });
-            console.log("Photo taken: ", photoRes);
-        }catch(error){
-          console.log("Take photo handler error: ", error);
+        // if the camera permission is granted, launch the camera
+        const photoRes = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        if(photoRes.canceled){
+          console.log("Photo taking cancelled.");
         }
-
+        console.log("Photo taken: ", photoRes.assets[0].uri);
       }
       
     }catch(error){
