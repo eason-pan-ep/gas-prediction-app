@@ -30,9 +30,14 @@ import DatePicker from '../components/DatePicker';
 
 import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
 
+import * as ImagePicker from 'expo-image-picker';
+
 
 
 export default function EditFuelingEntry({ navigation, route }) {
+  // state variable for storing the camera permission status
+  const [ status, requestPermission ] = ImagePicker.useCameraPermissions();
+
   // Function to check if this is a new fueling entry
   const checkIsNewEntry = () => {
     try{
@@ -141,6 +146,35 @@ export default function EditFuelingEntry({ navigation, route }) {
       }
     ]);
   };
+  
+
+
+  // function for handling take photo button press
+  const handleTakePhotoPress = async () => {
+    try{
+      if(!status.granted){ // if the camera permission is not granted, request the permission
+        await requestPermission();
+        console.log("Camera permission requested.");
+      }else{
+        try{
+          // if the camera permission is granted, launch the camera
+          const photoRes = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+          });
+            console.log("Photo taken: ", photoRes);
+        }catch(error){
+          console.log("Take photo handler error: ", error);
+        }
+
+      }
+      
+    }catch(error){
+      console.log("Take photo handler error: ", error);
+    }
+  };
 
 
 
@@ -163,7 +197,7 @@ export default function EditFuelingEntry({ navigation, route }) {
       />
 
       {/* button for adding photo */}
-      <CustomPressable title="Add Photo" onPress={()=>console.log("Add Photo Pressed.")} />
+      <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
       {/* button for removing photo */}
       <CustomPressable title="Remove Photo" onPress={()=>console.log("Remove Photo Pressed.")} />
       {/* button for saving changes */}

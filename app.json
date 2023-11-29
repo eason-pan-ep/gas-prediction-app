@@ -3,7 +3,7 @@
     "plugins": [
       [
       "expo-image-picker", {
-      "cameraPermission": "The app needs access to your camera." }
+      "cameraPermission": "Octane Oracle wants to use your camera, so that you can take photos for fueling entries." }
       ] ],
     "name": "gas-prediction-app",
     "slug": "gas-prediction-app",
