@@ -88,13 +88,11 @@ export default function EditFuelingEntry({ navigation, route }) {
 
   // to get the photo url and set the photo state variable
   useEffect(() => {
-    console.log("Photo ref: ", entryInfo.photoRef);
     const getPhotoUrl = async () => {
       if(entryInfo.photoRef !== ""){
         try{
           const reference = ref(storage, entryInfo.photoRef);
           const url = await getDownloadURL(reference);
-          console.log("Photo url: ", url);
           setPhoto(url);
         }catch(error){
           console.log("Error getting photo url: ", error);
@@ -102,7 +100,7 @@ export default function EditFuelingEntry({ navigation, route }) {
       }
     };
     getPhotoUrl();
-  }, [photo]);
+  }, []);
   
 
   // function for handling date changes
@@ -231,7 +229,7 @@ export default function EditFuelingEntry({ navigation, route }) {
       />
 
       {/* image goes here */}
-      {photo && <Image source={{ uri: photo }} style={styles.imageContainer} />}
+      {photo && <Image source={{ uri: photo }} style={styles.image} />}
 
       {/* button for adding photo */}
       <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
@@ -248,7 +246,7 @@ export default function EditFuelingEntry({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
+  image: {
     width: 300,
     height: 300,
     alignSelf: 'center',
