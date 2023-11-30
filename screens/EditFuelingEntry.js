@@ -21,7 +21,7 @@
 //
 
 
-import { View, Alert } from 'react-native'
+import { View, Alert, Image, StyleSheet, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 
 import CustomPressable from '../components/CustomPressable';
@@ -37,6 +37,9 @@ import * as ImagePicker from 'expo-image-picker';
 export default function EditFuelingEntry({ navigation, route }) {
   // state variable for storing the camera permission status
   const [ status, requestPermission ] = ImagePicker.useCameraPermissions();
+
+  // local state variable for storing the photo of the odometer
+  const [ photo, setPhoto ] = useState("");
 
   // Function to check if this is a new fueling entry
   const checkIsNewEntry = () => {
@@ -155,6 +158,7 @@ export default function EditFuelingEntry({ navigation, route }) {
       if(!status.granted){ // if the camera permission is not granted, request the permission
         await requestPermission();
         console.log("Camera permission requested.");
+        return;
       }else{
         // if the camera permission is granted, launch the camera
         const photoRes = await ImagePicker.launchCameraAsync({
@@ -163,10 +167,8 @@ export default function EditFuelingEntry({ navigation, route }) {
           aspect: [4, 3],
           quality: 1,
         });
-        if(photoRes.canceled){
-          console.log("Photo taking cancelled.");
-        }
         console.log("Photo taken: ", photoRes.assets[0].uri);
+        setPhoto(photoRes.assets[0].uri);
       }
       
     }catch(error){
@@ -178,7 +180,7 @@ export default function EditFuelingEntry({ navigation, route }) {
 
   // The main render
   return (
-    <View>
+    <ScrollView>
       {/* date picker goes here */}
       <DatePicker label={"Fueling Date*"} onDateChange={handleDateChange} defaultValue={entryInfo.date}/>
       {/* input for amount */}
@@ -194,16 +196,27 @@ export default function EditFuelingEntry({ navigation, route }) {
         inputType={'default'} isPassword={false} defaultValue={entryInfo.city}
       />
 
+      {/* image goes here */}
+      {photo && <Image source={{ uri: photo }} style={styles.imageContainer} />}
+
       {/* button for adding photo */}
       <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
       {/* button for removing photo */}
-      <CustomPressable title="Remove Photo" onPress={()=>console.log("Remove Photo Pressed.")} />
+      <CustomPressable title="Remove Photo" onPress={()=>setPhoto("")} />
       {/* button for saving changes */}
       <CustomPressable title="Save" onPress={handleSavePress} />
       {/* button for canceling changes */}
       <CustomPressable title="Cancel" onPress={handleCancelPress} />
       {/* button for delete the current entry */}
       {!isNewEntry&&<CustomPressable title="Delete" onPress={handleDeletePress} />}
-    </View>
+    </ScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    width: 300,
+    height: 300,
+    alignSelf: 'center',
+  },
+});
