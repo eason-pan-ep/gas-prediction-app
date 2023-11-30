@@ -38,9 +38,6 @@ export default function EditFuelingEntry({ navigation, route }) {
   // state variable for storing the camera permission status
   const [ status, requestPermission ] = ImagePicker.useCameraPermissions();
 
-  // local state variable for storing the photo of the odometer
-  const [ photo, setPhoto ] = useState("");
-
   // Function to check if this is a new fueling entry
   const checkIsNewEntry = () => {
     try{
@@ -168,7 +165,7 @@ export default function EditFuelingEntry({ navigation, route }) {
           quality: 1,
         });
         console.log("Photo taken: ", photoRes.assets[0].uri);
-        setPhoto(photoRes.assets[0].uri);
+        setEntryInfo({...entryInfo, photoRef: photoRes.assets[0].uri});
       }
       
     }catch(error){
@@ -197,12 +194,12 @@ export default function EditFuelingEntry({ navigation, route }) {
       />
 
       {/* image goes here */}
-      {photo && <Image source={{ uri: photo }} style={styles.imageContainer} />}
+      {entryInfo.photoRef && <Image source={{ uri: entryInfo.photoRef }} style={styles.imageContainer} />}
 
       {/* button for adding photo */}
       <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
       {/* button for removing photo */}
-      <CustomPressable title="Remove Photo" onPress={()=>setPhoto("")} />
+      <CustomPressable title="Remove Photo" onPress={()=>setEntryInfo({ ...entryInfo, photoRef: "" })} />
       {/* button for saving changes */}
       <CustomPressable title="Save" onPress={handleSavePress} />
       {/* button for canceling changes */}

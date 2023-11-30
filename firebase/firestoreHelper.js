@@ -3,6 +3,7 @@
 
 import { database, auth } from "./firebaseSetup";
 import { addDoc, collection, doc, updateDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
+import { storage } from "./firebaseSetup";
 
 
 // This function writes the user profile data to the userProfiles collection in the database.
@@ -114,4 +115,6 @@ export const clearUserPredictionCache = async () => {
         console.log("Error clearing user prediction cache: ", error);
     }
 };
+
+
 
