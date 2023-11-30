@@ -29,6 +29,8 @@ import EditableField from '../components/EditableField';
 import DatePicker from '../components/DatePicker';
 
 import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
+import { uploadImage } from '../firebase/storageHelper';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -37,6 +39,9 @@ import * as ImagePicker from 'expo-image-picker';
 export default function EditFuelingEntry({ navigation, route }) {
   // state variable for storing the camera permission status
   const [ status, requestPermission ] = ImagePicker.useCameraPermissions();
+
+  // local state variable for storing the photo of the odometer
+  const [ photo, setPhoto ] = useState("");
 
   // Function to check if this is a new fueling entry
   const checkIsNewEntry = () => {
@@ -117,10 +122,22 @@ export default function EditFuelingEntry({ navigation, route }) {
     }
     if(isNewEntry){
       //write to Firestore fuelingHistory collection
-      writeToFuelingHistory(entryInfo);
+      if(photo !== ""){
+        //upload the photo to Firebase storage and get the download url
+        uploadImage(photo, entryInfo, "");
+      }else{
+        writeToFuelingHistory(entryInfo);
+      }
+      
     }else{
-      //update the existing entry in Firestore fuelingHistory collection
-      updateFuelingHistory(entryInfo, route.params.fuelingEntryData.docID);
+      if(photo !== ""){
+        //upload the photo to Firebase storage and get the download url
+        uploadImage(photo, entryInfo, route.params.fuelingEntryData.docID);
+      }else{
+        //update the existing entry in Firestore fuelingHistory collection
+        updateFuelingHistory(entryInfo, route.params.fuelingEntryData.docID);
+      }
+      
     }
     //navigate to where the user came from
     navigation.navigate("Fueling History");
@@ -165,7 +182,7 @@ export default function EditFuelingEntry({ navigation, route }) {
           quality: 1,
         });
         console.log("Photo taken: ", photoRes.assets[0].uri);
-        setEntryInfo({...entryInfo, photoRef: photoRes.assets[0].uri});
+        setPhoto(photoRes.assets[0].uri);
       }
       
     }catch(error){
@@ -194,12 +211,12 @@ export default function EditFuelingEntry({ navigation, route }) {
       />
 
       {/* image goes here */}
-      {entryInfo.photoRef && <Image source={{ uri: entryInfo.photoRef }} style={styles.imageContainer} />}
+      {photo && <Image source={{ uri: photo }} style={styles.imageContainer} />}
 
       {/* button for adding photo */}
       <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
       {/* button for removing photo */}
-      <CustomPressable title="Remove Photo" onPress={()=>setEntryInfo({ ...entryInfo, photoRef: "" })} />
+      <CustomPressable title="Remove Photo" onPress={()=>setPhoto("")} />
       {/* button for saving changes */}
       <CustomPressable title="Save" onPress={handleSavePress} />
       {/* button for canceling changes */}
