@@ -22,7 +22,7 @@
 
 
 import { View, Alert, Image, StyleSheet, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import CustomPressable from '../components/CustomPressable';
 import EditableField from '../components/EditableField';
@@ -31,6 +31,7 @@ import DatePicker from '../components/DatePicker';
 import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
 import { uploadImage } from '../firebase/storageHelper';
 import { getDownloadURL, ref } from 'firebase/storage';
+import { storage } from '../firebase/firebaseSetup';
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -83,6 +84,25 @@ export default function EditFuelingEntry({ navigation, route }) {
   };
   // state variable for storing the fueling entry information
   const[entryInfo, setEntryInfo] = useState(initializeData());
+
+
+  // to get the photo url and set the photo state variable
+  useEffect(() => {
+    console.log("Photo ref: ", entryInfo.photoRef);
+    const getPhotoUrl = async () => {
+      if(entryInfo.photoRef !== ""){
+        try{
+          const reference = ref(storage, entryInfo.photoRef);
+          const url = await getDownloadURL(reference);
+          console.log("Photo url: ", url);
+          setPhoto(url);
+        }catch(error){
+          console.log("Error getting photo url: ", error);
+        }
+      }
+    };
+    getPhotoUrl();
+  }, [photo]);
   
 
   // function for handling date changes

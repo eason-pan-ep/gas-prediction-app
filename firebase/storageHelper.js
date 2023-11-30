@@ -20,13 +20,13 @@ export const uploadImage = async (uri, entryInfo, docID) => {
 
         // get the image name and create a reference to the image in the firebase storage
         const imageName = uri.substring(uri.lastIndexOf('/')+1);
-        const imageRef = await ref(storage, `images/${imageName}`);
+        const imageRef = ref(storage, `images/${imageName}`);
 
         // upload the image to the firebase storage and get the download url
         const uploadRes = await uploadBytesResumable(imageRef, blob);
         const url = uploadRes.metadata.fullPath;
         console.log("Image uploaded: ", url);
-        if(docID != ""){
+        if(docID !== ""){
             // if the docID is available, update the fueling entry data in the database with the image url
             updateFuelingHistory({...entryInfo, photoRef: url}, docID);
         }else{
