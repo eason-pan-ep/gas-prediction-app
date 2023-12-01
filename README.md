@@ -99,14 +99,14 @@ Primary Contributor: Macarious
       - lowest price paid
   - These functions are displayed on the Profile page
 
-## Screenshots from Iteration #1
+### Screenshots from Iteration #1
 #### Front-end
 ![iteration 1 screens](/ReadMeRes/Iteration_1_screens.png)
 
 #### Back-end
 ![iteration 1 firebase](/ReadMeRes/Iteration_1_firebase.png)
 
-### Iteration II - Device Features and UI Design
+## Iteration II - Device Features and UI Design
 - Authentication
 - Camera features with firestore storage
 - Read, parse and store user's location data (Google Map API to be implemented in Iteration #3)
@@ -152,7 +152,7 @@ Photos are saved in Firestore Storage successfully:
 - Mock screens are continually updated on Figma
 - Final UI design will be implemented in Iteration III
 
-### Iteration III - Prediction Feature and Polish
+## Iteration III - Prediction Feature and Polish
 - OpenAI API & LangChain Integration
 - Google Map APIs (the Near Gas Station part, and prep for later prediction use)
 - Production UI integration
