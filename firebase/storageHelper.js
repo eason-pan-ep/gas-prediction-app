@@ -1,9 +1,9 @@
 // This file contains the helper functions for the firebase storage.
 
 import { storage } from "./firebaseSetup";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytesResumable, deleteObject } from "firebase/storage";
 
-import { writeToFuelingHistory, updateFuelingHistory } from "./firestoreHelper";
+import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from "./firestoreHelper";
 
 
 // This function uploads the image to the firebase storage, 
@@ -36,5 +36,35 @@ export const uploadImage = async (uri, entryInfo, docID) => {
     }catch(error){
         console.log("Error uploading image: ", error);
     }
-    
+};
+
+// This function deletes entries with image from the firebase storage and database.
+// It takes in 2 parameters:
+// //1. docID - the document id of the fueling entry
+// //2. url - the full path of the image in the firebase storage
+export const deleteEntriesWithImage = async (docID, url) => {
+    try{
+        // delete the image from the firebase storage
+        const imgRef = ref(storage, url);
+        await deleteObject(imgRef);
+
+        // delete the fueling entry data from the database
+        deleteFromFuelingHistory(docID);
+    }catch(error){
+        console.log("Error deleting entries with image: ", error);
+    }
+};
+
+
+// This function deletes the image from the firebase storage.
+// It takes in 1 parameter:
+// //1. url - the full path of the image in the firebase storage
+export const deleteImage = async (url) => {
+    try{
+        // delete the image from the firebase storage
+        const imgRef = ref(storage, url);
+        await deleteObject(imgRef);
+    }catch(error){
+        console.log("Error deleting image: ", error);
+    }
 };

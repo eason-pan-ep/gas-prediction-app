@@ -29,7 +29,7 @@ import EditableField from '../components/EditableField';
 import DatePicker from '../components/DatePicker';
 
 import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
-import { uploadImage } from '../firebase/storageHelper';
+import { uploadImage, deleteEntriesWithImage, deleteImage } from '../firebase/storageHelper';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../firebase/firebaseSetup';
 
@@ -146,8 +146,12 @@ export default function EditFuelingEntry({ navigation, route }) {
       }else{
         writeToFuelingHistory(entryInfo);
       }
-      
     }else{
+      // if users changed the photo, delete the old photo from Firebase storage
+      if(entryInfo.photoRef !== photo.substring(photo.lastIndexOf('/')+1)){
+        //delete the old image from Firebase storage
+        deleteImage(entryInfo.photoRef);
+      }
       if(photo !== ""){
         //upload the photo to Firebase storage and get the download url
         uploadImage(photo, entryInfo, route.params.fuelingEntryData.docID);
@@ -155,7 +159,6 @@ export default function EditFuelingEntry({ navigation, route }) {
         //update the existing entry in Firestore fuelingHistory collection
         updateFuelingHistory(entryInfo, route.params.fuelingEntryData.docID);
       }
-      
     }
     //navigate to where the user came from
     navigation.navigate("Fueling History");
@@ -164,6 +167,7 @@ export default function EditFuelingEntry({ navigation, route }) {
 
   // function for handling delete button press
   const handleDeletePress = () => {
+    console.log("Photo ref: ", entryInfo.photoRef);
     //confirm the deletion
     Alert.alert("Confirm to Delete", "Are you sure you want to delete this fueling entry?\n This data CANNOT be recovered afterwards.", [
       { // if the user cancels, do nothing
@@ -174,7 +178,13 @@ export default function EditFuelingEntry({ navigation, route }) {
       { // if the user confirms, delete the fueling entry from the database and navigate to the Fueling History screen
         text: "Delete",
         onPress: () => {
-          deleteFromFuelingHistory(route.params.fuelingEntryData.docID);
+          if(entryInfo.photoRef !== ""){
+            // if the fueling entry has a photo, delete the photo from the firebase storage and delete the fueling entry from the database
+            deleteEntriesWithImage(route.params.fuelingEntryData.docID, entryInfo.photoRef);
+          }else{
+            // if the fueling entry does not have a photo, delete the fueling entry from the database
+            deleteFromFuelingHistory(route.params.fuelingEntryData.docID);
+          }
           navigation.navigate("Fueling History");
         },
         style: "destructive"
@@ -199,7 +209,6 @@ export default function EditFuelingEntry({ navigation, route }) {
           aspect: [4, 3],
           quality: 1,
         });
-        console.log("Photo taken: ", photoRes.assets[0].uri);
         setPhoto(photoRes.assets[0].uri);
       }
       

@@ -19,6 +19,7 @@ import StaticField from '../components/StaticField';
 import { deleteFromFuelingHistory } from '../firebase/firestoreHelper';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../firebase/firebaseSetup';
+import { deleteEntriesWithImage } from '../firebase/storageHelper';
 
 
 
@@ -64,7 +65,13 @@ export default function FuelingEntry({ navigation, route }) {
       { // if the user confirms, delete the fueling entry from the database and navigate to the Fueling History screen
         text: "Delete",
         onPress: () => {
-          deleteFromFuelingHistory(fuelingEntryData.docID);
+          if(fuelingEntryData.photoRef !== ""){
+            // if the fueling entry has a photo, delete the photo from the firebase storage and delete the fueling entry from the database
+            deleteEntriesWithImage(route.params.fuelingEntryData.docID, fuelingEntryData.photoRef);
+          }else{
+            deleteFromFuelingHistory(fuelingEntryData.docID);
+          }
+          
           navigation.navigate("Fueling History");
         },
         style: "destructive"
