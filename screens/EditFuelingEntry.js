@@ -157,7 +157,8 @@ export default function EditFuelingEntry({ navigation, route }) {
         uploadImage(photo, entryInfo, route.params.fuelingEntryData.docID);
       }else{
         //update the existing entry in Firestore fuelingHistory collection
-        updateFuelingHistory(entryInfo, route.params.fuelingEntryData.docID);
+        const updatedEntryInfo = {...entryInfo, photoRef: ""};
+        updateFuelingHistory(updatedEntryInfo, route.params.fuelingEntryData.docID);
       }
     }
     //navigate to where the user came from
