@@ -1,4 +1,5 @@
 # Gas Prediction App
+
 Group project for CS5520, fall 2023.
 | App Name | Octane Oracle |
 | --- | --- |
@@ -6,21 +7,29 @@ Group project for CS5520, fall 2023.
 | Slogan | Your Fuel Future, Revealed |
 | Target users | Gasoline car owners in Canada |
 
-
-
 ## Team Member
 Macarious Kin Fung Hui, Yuchen Pan (Eason)
 
-## Iteration #1
-### Navigation & Screens with placeholder UIs
-Primary Contributor: Mcarious
+## Summary
+### Iteration I - *Device Features and UI Design*
+- App navigation
+- Firestore databse setup with CRUD operations
 
-### Server Side Development
-Primary Contributor: Eason
-#### Authentication
-- Sign up
-- Sign in
-- Change password
+### Iteration II - *Device Features and UI Design*
+- Authentication
+- Camera features with firestore storage
+- Read, parse and store user's location data (Google Map API to be implemented in Iteration #3)
+- UI design (update mock screens, to be fully implemented in Iteration 3)
+
+## Iteration III - *Prediction Feature and Polish*
+- OpenAI API & LangChain Integration
+- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
+- Production UI integration
+- Polish interactions 
+- Test and compile (pack)
+  
+## Iteration I
+
 #### Firestore database
 CRUD operations for 3 collections in Firestore
 1. userProfiles 
@@ -32,6 +41,7 @@ CRUD operations for 3 collections in Firestore
     - carModel: String -- the model of users' car
     - gasType: Number -- the type of gas for their car
     - user: String -- unique uid for an individual user
+
 2. fuelingHistory
 - Users can write (add) new entries
 - Users can update entries
@@ -43,6 +53,7 @@ CRUD operations for 3 collections in Firestore
     - amount: Number -- the total amount of gas purchased
     - photoRef: String -- reference link of photo storage
     - user: String -- unique uid for an individual user
+
 3. predictionData
 - Write data to this collection when there is a new prediction generated
 - Try to find a match data when a user requests prediction in the same city at the same day multiple times
@@ -95,15 +106,55 @@ Primary Contributor: Macarious
 #### Back-end
 ![iteration 1 firebase](/ReadMeRes/Iteration_1_firebase.png)
 
-## Next Steps
 ### Iteration II - Device Features and UI Design
-- Firebase storage and camera features
-- Read, parse and store for location data
-- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
-- Start UI design (the production version)
+- Authentication
+- Camera features with firestore storage
+- Read, parse and store user's location data (Google Map API to be implemented in Iteration #3)
+- UI design (update mock screens, to be fully implemented in Iteration 3)
+
+### Server Side Development
+Primary Contributor: Eason
+
+#### Authentication
+- New users can register for the application by providing necessary information
+- Implement validation checks to ensure data integrity during the sign-up process
+- Existing users can securely log in using their registered credentials
+
+Registered users, shown on Firebase Authentication screen:
+![image](https://github.com/eason-pan-ep/gas-prediction-app/assets/63441014/5ae3a6f1-3162-4f70-82d4-62e6d2f35fc7)
+
+### Camera Features
+1. Capture Process:
+- Request camera permissions to enable photo capture
+- Implement functionality to take and crop photos
+2. Firebase Storage Integration:
+- Implement features for uploading, downloading, and deleting photos in Firebase Storage
+- Set storage rules to ensure only authorized users can access stored content
+3. Fueling Entries and Editing:
+- When users delete an entry, associated photos in Firebase Storage will be automatically deleted
+- Removal of a photo from an entry or uploading a new photo triggers appropriate updates in Firebase Storage
+
+Photos Reference are saved in Firestore database successfully:
+![image](https://github.com/eason-pan-ep/gas-prediction-app/assets/63441014/1f3d9ece-1942-40a4-bc8c-4c40b81a5c9b)
+
+Photos are saved in Firestore Storage successfully:
+![image](https://github.com/eason-pan-ep/gas-prediction-app/assets/63441014/595320e2-f603-4efd-85f0-f491367f85c2)
+
+### User's Location Data
+- Request location permissions for accessing the device's location service
+- Add button to retrieve the current location of the device
+- Process the location data and display it on the Nearby Gas Stations page
+- Map will be implemented in Iteration III
+
+### Frontend Development
+
+### UI design (mock screens update)
+- Mock screens are continually updated on Figma
+- Final UI design will be implemented in Iteration III
 
 ### Iteration III - Prediction Feature and Polish
 - OpenAI API & LangChain Integration
-- Production UI integration 
+- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
+- Production UI integration
 - Polish interactions 
 - Test and compile (pack)
