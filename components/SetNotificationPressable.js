@@ -3,10 +3,9 @@
 // It is used in the PredictionItem component.
 
 import { Entypo } from "@expo/vector-icons";
-import { Pressable } from "react-native";
+import { Alert, Pressable } from "react-native";
 import React, { useState } from "react";
 import * as Notifications from "expo-notifications";
-import { Alert } from "react-native";
 
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
@@ -17,18 +16,14 @@ export const verifyPermissions = async () => {
     return true;
   }
   const response = await Notifications.requestPermissionsAsync({
-    ios: {
-      allowAlert: true,
-      allowBadge: true,
-      allowSound: true,
-      allowAnnouncements: true,
-    },
+    ios: { allowBadge: true },
   });
   return response.granted;
 };
 
-export default function SetNotificationPressable(date) {
-  const { reminderTime, setReminderTime } = useState("09:00");
+export default function SetNotificationPressable(props) {
+  const { date } = props;
+  const [reminderTime, setReminderTime] = useState("09:00");
 
   const isValidTime = (time) => {
     const [hours, minutes] = time.split(":");
@@ -38,6 +33,28 @@ export default function SetNotificationPressable(date) {
       parseInt(minutes, 10) >= 0 &&
       parseInt(minutes, 10) <= 59
     );
+  };
+
+  const scheduleNotification = async (time) => {
+    const [hours, minutes] = time.split(":");
+    const notificationTime = new Date(date);
+    notificationTime.setHours(hours);
+    notificationTime.setMinutes(minutes);
+    notificationTime.setSeconds(0);
+    notificationTime.setMilliseconds(0);
+
+    const now = new Date();
+    const delay = notificationTime.getTime() - now.getTime();
+
+    const identifier = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Reminder to Fill Up Gas",
+        body: "Don't forget to fill up your gas tank today!",
+      },
+      trigger: {
+        seconds: delay / 1000, // Convert milliseconds to seconds
+      },
+    });
   };
 
   const scheduleNotificationHandler = async () => {
@@ -50,46 +67,44 @@ export default function SetNotificationPressable(date) {
         );
         return;
       }
-      // Modal popup to ask user for time
-      // set the reminder time
-      Alert.prompt(
-        "Set Reminder Time",
-        "Enter the time you want to be reminded at (HH:MM)",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-          {
-            text: "Set",
-            onPress: (time) => {
-              if (isValidTime(time)) {
-                setReminderTime(time);
-
-                const scheduleTime = new Date(date);
-                const [hours, minutes] = time.split(":");
-                scheduleTime.setHours(parseInt(hours, 10));
-                scheduleTime.setMinutes(parseInt(minutes, 10));
-
-                Notifications.scheduleNotificationAsync({
-                  content: {
-                    title: "Reminder",
-                    body: "Time to fill up your tank!",
-                  },
-                  trigger: { date: scheduleTime },
-                });
-                console.log("scheduled notification at", scheduleTime);
-              } else {
-                Alert.alert(
-                  "Invalid Time",
-                  "Please enter a valid time (HH:MM)",
-                  [{ text: "Okay" }]
-                );
-              }
+      // use Alert.prompt if os is ios
+      // otherwise, set reminder time to default time of 9:00
+      if (Platform.OS === "ios") {
+        Alert.prompt(
+          "Set Reminder",
+          "Enter a time in the format HH:MM",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
             },
-          },
-        ],
-        "plain-text"
+            {
+              text: "Set",
+              onPress: (time) => {
+                if (!isValidTime(time)) {
+                  Alert.alert(
+                    "Invalid time format",
+                    "Please enter a time in the format HH:MM",
+                    [{ text: "Okay" }]
+                  );
+                  return;
+                }
+                setReminderTime(time);
+                scheduleNotification(time);
+              },
+            },
+          ],
+          "plain-text",
+          reminderTime
+        );
+      } else {
+        scheduleNotification(reminderTime);
+      }
+
+      Alert.alert(
+        "Reminder Set",
+        `You will be notified at ${reminderTime} on ${date}`,
+        [{ text: "Okay" }]
       );
     } catch (err) {
       console.log("schedule notification error", err);
