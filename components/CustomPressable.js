@@ -5,6 +5,7 @@
 // // style - object, additional style to apply to the button
 
 import { Pressable, Text, StyleSheet } from "react-native";
+import React from "react";
 
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
@@ -30,12 +31,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
-    padding: 10,
-    borderRadius: 10,
+    height: 60,
+    paddingHorizontal: 50,
+    paddingVertical: 10,
+    borderRadius: 30,
+    elevation: 10,
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
   },
   pressableText: {
     color: colors.primaryText,
     fontSize: fontSizes.large,
+    fontFamily: "Lato-Regular",
   },
   pressablePressed: {
     backgroundColor: colors.primaryDark,

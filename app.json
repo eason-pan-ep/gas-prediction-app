@@ -1,15 +1,5 @@
 {
   "expo": {
-    "plugins": [
-     [
-        "expo-location", {
-          "locationAlwaysAndWhenInUsePermission": "Octan Oracle would like to use your location to provide you with the most accurate gas price predictions." }
-      ],
-      [
-        "expo-image-picker", {
-          "cameraPermission": "Octane Oracle wants to use your camera, so that you can take photos for fueling entries." }
-      ]
-    ],
     "name": "gas-prediction-app",
     "slug": "gas-prediction-app",
     "version": "1.0.0",
@@ -21,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -35,6 +23,20 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Octan Oracle would like to use your location to provide you with the most accurate gas price predictions."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Octane Oracle wants to use your camera, so that you can take photos for fueling entries."
+        }
+      ]
+    ]
   }
 }
