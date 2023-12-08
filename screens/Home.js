@@ -3,12 +3,14 @@
 // // 1. Predict Gas Prices - navigates to the Prediction screen.
 // // 2. Add Fueling Entry - navigates to the Edit Fuelling Entry screen.
 
-import { View, Text, Button } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { auth } from "../firebase/firebaseSetup";
 import { signOut } from "firebase/auth";
 
+import LargePressable from "../components/LargePressable";
 import CustomPressable from "../components/CustomPressable";
+import { colors } from "../styles/colors";
 
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
@@ -25,16 +27,16 @@ export default function Home({ navigation }) {
 
   //
   function onPressSignOut() {
-    try{
+    try {
       auth.signOut();
-    }catch(error){
+    } catch (error) {
       console.log("error signing out: ", error);
     }
   }
 
   return (
-    <View>
-      <CustomPressable
+    <View style={styles.container}>
+      <LargePressable
         title="Predict Gas Prices"
         onPress={onPressPredictGasPrices}
       />
@@ -42,9 +44,29 @@ export default function Home({ navigation }) {
         title="Add Fueling Entry"
         onPress={onPressAddFuelingEntry}
       />
-
-      {/* for testing purpose only, here is a logout button */}
-      <Button title="Sign Out" onPress={onPressSignOut} />
+      <CustomPressable
+        title="Sign Out"
+        onPress={onPressSignOut}
+        style={{
+          backgroundColor: colors.background,
+          borderColor: colors.error,
+          borderWidth: 2,
+          elevation: 0,
+          shadowOpacity: 0,
+        }}
+        textStyle={{
+          color: colors.error,
+        }}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: "center",
+    paddingTop: 50,
+  },
+});

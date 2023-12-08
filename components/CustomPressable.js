@@ -10,17 +10,17 @@ import React from "react";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function CustomPressable({ title, onPress, style }) {
+export default function CustomPressable({ title, onPress, style, textStyle }) {
   return (
     <Pressable
       style={({ pressed }) => [
         styles.pressableContainer,
-        pressed && styles.pressablePressed,
         style,
+        pressed && { opacity: 0.5 },
       ]}
       onPress={onPress}
     >
-      <Text style={styles.pressableText}>{title}</Text>
+      <Text style={[styles.pressableText, textStyle]}>{title}</Text>
     </Pressable>
   );
 }
@@ -30,22 +30,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
+    minWidth: 200,
     margin: 10,
     height: 60,
-    paddingHorizontal: 50,
+    paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 30,
     elevation: 10,
     shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 0.8,
-    shadowRadius: 5,
+    shadowRadius: 10,
   },
   pressableText: {
     color: colors.primaryText,
     fontSize: fontSizes.large,
-    fontFamily: "Lato-Regular",
-  },
-  pressablePressed: {
-    backgroundColor: colors.primaryDark,
   },
 });

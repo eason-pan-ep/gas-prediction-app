@@ -30,15 +30,15 @@
 // // disabled -- the disabled color of the app, used for disabled components
 // // disabledText -- the text color of the disabled color
 
-// Use off-white background, lavender for primary, light blue for secondary, dark purple for accent
+// Off-white background, lavender for primary, light blue for secondary, dark purple for accent
 export const colors = {
   background: "#f5f5f5",
-  backgroundText: "#000000",
+  backgroundText: "#3c3b9e",
   primary: "#6f6ef2",
   primaryLight: "#a8a8ff",
   primaryDark: "#3c3b9e",
   primaryText: "#ffffff",
-  primaryLightText: "#000000",
+  primaryLightText: "#ffffff",
   primaryDarkText: "#ffffff",
   secondary: "#90caf9",
   secondaryLight: "#bbdefb",
@@ -50,7 +50,7 @@ export const colors = {
   accentLight: "#feae99 ",
   accentDark: "#c43e00",
   accentText: "#ffffff",
-  accentLightText: "#000000",
+  accentLightText: "#ffffff",
   accentDarkText: "#ffffff",
   error: "#f44336",
   errorText: "#ffffff",

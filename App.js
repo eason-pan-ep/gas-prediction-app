@@ -24,7 +24,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
-import { useFonts } from "expo-font";
 import { FontAwesome } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
@@ -167,15 +166,6 @@ const MainStackNavigator = () => {
 };
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    "Lato-Black": require("./assets/fonts/Lato-Black.ttf"),
-    "Lato-Bold": require("./assets/fonts/Lato-Bold.ttf"),
-    "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
-  });
-
-  // *********************************
-  // Temporarily set to true for testing purposes.
-  // *********************************
   const [authenticated, setAuthenticated] = useState(false);
 
   // *********************************
@@ -204,31 +194,27 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryDark,
   },
   stackNavigatorTitle: {
-    color: colors.primaryText,
+    color: colors.primaryDarkText,
     fontSize: fontSizes.extraLarge,
   },
   tabNavigator: {
-    backgroundColor: colors.primary,
-    height: "11%",
-  },
-  tabNavigatorTitle: {
-    color: colors.primaryText,
-    fontSize: fontSizes.extraLarge,
+    backgroundColor: colors.primaryLight,
+    height: "10%",
   },
   tabNavigatorLabel: {
-    color: colors.backgroundText,
-    fontSize: fontSizes.normal,
+    color: colors.primaryLightText,
+    fontSize: fontSizes.small,
     marginBottom: 10,
   },
   tabNavigatorIcon: {
-    color: colors.backgroundText,
+    color: colors.primaryLightText,
     fontSize: fontSizes.large,
   },
   tabNavigatorHeader: {
     backgroundColor: colors.primaryDark,
   },
   tabNavigatorHeaderTitle: {
-    color: colors.primaryText,
+    color: colors.primaryDarkText,
     fontSize: fontSizes.extraLarge,
   },
 });
@@ -243,7 +229,7 @@ const tabNavigatorOptions = {
   tabBarStyle: styles.tabNavigator,
   tabBarLabelStyle: styles.tabNavigatorLabel,
   tabBarIconStyle: styles.tabNavigatorIcon,
-  tabBarActiveTintColor: colors.accentDark,
+  tabBarActiveTintColor: colors.primary,
   tabBarInactiveTintColor: colors.disabledText,
   headerStyle: styles.tabNavigatorHeader,
   headerTitleStyle: styles.tabNavigatorHeaderTitle,
