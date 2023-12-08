@@ -8,7 +8,6 @@ import React, { useState } from "react";
 import * as Notifications from "expo-notifications";
 
 import { colors } from "../styles/colors";
-import { fontSizes } from "../styles/fontSizes";
 
 export const verifyPermissions = async () => {
   const status = await Notifications.getPermissionsAsync();
@@ -23,7 +22,7 @@ export const verifyPermissions = async () => {
 
 export default function SetNotificationPressable(props) {
   const { date } = props;
-  const [reminderTime, setReminderTime] = useState("9:00"); // Default reminder time is 9:00
+  const [reminderTime, setReminderTime] = useState("09:00"); // Default reminder time is 9:00
 
   // // Use for testing
   // const date = "2023-12-07";
