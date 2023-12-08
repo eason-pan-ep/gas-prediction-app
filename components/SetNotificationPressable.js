@@ -23,7 +23,11 @@ export const verifyPermissions = async () => {
 
 export default function SetNotificationPressable(props) {
   const { date } = props;
-  const [reminderTime, setReminderTime] = useState("09:00");
+  const [reminderTime, setReminderTime] = useState("9:00"); // Default reminder time is 9:00
+
+  // // Use for testing
+  // const date = "2023-12-07";
+  // const [reminderTime, setReminderTime] = useState("23:24");
 
   const isValidTime = (time) => {
     const [hours, minutes] = time.split(":");
@@ -37,7 +41,7 @@ export default function SetNotificationPressable(props) {
 
   const scheduleNotification = async (time) => {
     const [hours, minutes] = time.split(":");
-    const notificationTime = new Date(date);
+    const notificationTime = new Date(date + "T00:00:00");
     notificationTime.setHours(hours);
     notificationTime.setMinutes(minutes);
     notificationTime.setSeconds(0);
@@ -45,8 +49,7 @@ export default function SetNotificationPressable(props) {
 
     const now = new Date();
     const delay = notificationTime.getTime() - now.getTime();
-
-    const identifier = await Notifications.scheduleNotificationAsync({
+    await Notifications.scheduleNotificationAsync({
       content: {
         title: "Reminder to Fill Up Gas",
         body: "Don't forget to fill up your gas tank today!",
