@@ -8,11 +8,16 @@
 // This screen contains 1 button (on the header):
 // // 1. "+" - navigate to the Add a Fueling Entry screen.
 
-import { FlatList, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  ScrollView,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { FontAwesome } from "@expo/vector-icons";
 
 import CustomPressable from "../components/CustomPressable";
 import ListItem from "../components/ListItem";
@@ -22,7 +27,13 @@ import { fontSizes } from "../styles/fontSizes";
 
 export default function FuelingHistory({ navigation }) {
   // state variable for storing the user's fueling history data read from the database
+  const filterChoices = [
+    { type: "price", text: "Price" },
+    { type: "amount", text: "Amount" },
+    { type: "total", text: "Total" },
+  ];
   const [fuelingList, setFuelingList] = useState([]);
+  const [filterInfo, setFilterInfo] = useState("price");
 
   //Function to handle on press of the add fueling entry button
   function onPressAddFuelingEntry() {
@@ -65,21 +76,45 @@ export default function FuelingHistory({ navigation }) {
   // The main render
   return (
     <SafeAreaView style={styles.container}>
+      {/* the filter buttons */}
+      <View style={styles.filterPressableContainer}>
+        {filterChoices.map((filterChoice) => (
+          <CustomPressable
+            key={filterChoice.type}
+            title={filterChoice.text}
+            onPress={() => setFilterInfo(filterChoice.type)}
+            style={{
+              flexGrow: 1,
+              minWidth: "auto",
+              backgroundColor:
+                filterInfo === filterChoice.type
+                  ? colors.primary
+                  : colors.background,
+              borderColor: colors.primary,
+              borderWidth: 2,
+              shadowColor: colors.primary,
+            }}
+            textStyle={{
+              fontSize: fontSizes.normal,
+              color:
+                filterInfo === filterChoice.type
+                  ? colors.background
+                  : colors.primary,
+            }}
+          />
+        ))}
+      </View>
       {/* the add new fueling entry button */}
       <CustomPressable
         title="Add a Fueling Entry"
         onPress={onPressAddFuelingEntry}
-      >
-        <FontAwesome
-          name="plus"
-          size={fontSizes.large}
-          color={colors.primaryText}
-        />
-      </CustomPressable>
+      ></CustomPressable>
       {/* the list of fueling entries */}
       <FlatList
         data={fuelingList}
-        renderItem={(listItem) => <ListItem fuelingEntryData={listItem.item} />}
+        renderItem={(listItem) => (
+          <ListItem fuelingEntryData={listItem.item} filter={filterInfo} />
+        )}
         style={styles.flatList}
       />
     </SafeAreaView>
@@ -88,10 +123,18 @@ export default function FuelingHistory({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.background,
     alignItems: "center",
     paddingTop: 25,
     marginHorizontal: 10,
+  },
+  filterPressableContainer: {
+    flexDirection: "row",
+    width: "100%",
+    paddingHorizontal: 10,
+    marginHorizontal: 5,
+    justifyContent: "space-between",
   },
   flatList: {
     width: "100%",

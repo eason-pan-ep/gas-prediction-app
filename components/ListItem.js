@@ -17,7 +17,7 @@ import IndividualItemContainer from "./IndividualItemContainer";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-const ListItem = ({ fuelingEntryData }) => {
+const ListItem = ({ fuelingEntryData, filter }) => {
   // destructure the fueling entry data for display
   const { date, price, amount } = fuelingEntryData;
   const navigation = useNavigation();
@@ -40,17 +40,23 @@ const ListItem = ({ fuelingEntryData }) => {
         ]}
         onPress={onPressFuelingEntry}
       >
-        <Text style={[styles.pressableText, styles.dateText]}>
+        <Text style={[styles.infoText, styles.dateText]}>
           {date
             .split("-")
             .map((item) => (item.length === 1 ? "0" + item : item))
             .join("-")}
         </Text>
-        <Text style={styles.pressableText}>${price.toFixed(2)} /L</Text>
-        <Text style={styles.pressableText}>{amount.toFixed(2)} L</Text>
-        <Text style={styles.pressableText}>
-          ${(Math.round(price * amount * 100) / 100).toFixed(2)}
-        </Text>
+        {filter === "price" && (
+          <Text style={styles.infoText}>${price.toFixed(2)} /L</Text>
+        )}
+        {filter === "amount" && (
+          <Text style={styles.infoText}>{amount.toFixed(2)} L</Text>
+        )}
+        {filter === "total" && (
+          <Text style={styles.infoText}>
+            ${(Math.round(price * amount * 100) / 100).toFixed(2)}
+          </Text>
+        )}
       </Pressable>
     </IndividualItemContainer>
   );
@@ -73,12 +79,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  pressableText: {
+  dateText: {
     color: colors.infoDark,
     fontSize: fontSizes.normal,
+    fontWeight: "bold",
   },
-  dateText: {
-    color: colors.accent,
+  infoText: {
+    color: colors.infoDark,
     fontSize: fontSizes.normal,
     fontWeight: "bold",
   },
