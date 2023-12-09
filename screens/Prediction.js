@@ -7,7 +7,14 @@
 // // 2. Done - navigates back to the Home screen.
 // // 3. Clear Cache - clears the cache of the prediction data.
 
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  SafeAreaView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { getDateList, getSuggestedDate } from "../utility/predictionUtil";
 import { auth, database } from "../firebase/firebaseSetup";
@@ -102,7 +109,7 @@ export default function Prediction({ navigation }) {
 
   // The main render
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.suggestionText}>Prediction for city of</Text>
       <Text style={styles.headerText}>{city}</Text>
       {predictions.length === 0 ? null : (
@@ -143,7 +150,7 @@ export default function Prediction({ navigation }) {
         }}
       />
       <SubtlePressable title={"Clear Cache"} onPress={onPressClearCache} />
-    </View>
+    </SafeAreaView>
   );
 }
 

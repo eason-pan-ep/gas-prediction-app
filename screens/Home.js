@@ -3,7 +3,7 @@
 // // 1. Predict Gas Prices - navigates to the Prediction screen.
 // // 2. Add Fueling Entry - navigates to the Edit Fuelling Entry screen.
 
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import React from "react";
 import { auth } from "../firebase/firebaseSetup";
 import { signOut } from "firebase/auth";
@@ -35,7 +35,7 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <LargePressable
         title="Predict Gas Prices"
         onPress={onPressPredictGasPrices}
@@ -58,7 +58,7 @@ export default function Home({ navigation }) {
           color: colors.error,
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

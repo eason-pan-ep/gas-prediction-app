@@ -13,6 +13,7 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import IndividualItemContainer from "./IndividualItemContainer";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
@@ -31,14 +32,27 @@ const ListItem = ({ fuelingEntryData }) => {
 
   // The main render
   return (
-    <Pressable style={styles.container} onPress={onPressFuelingEntry}>
-      <Text style={styles.infoText}>{date}</Text>
-      <Text style={styles.infoText}>$ {price} / L</Text>
-      <Text style={styles.infoText}>{amount} L</Text>
-      <Text style={styles.infoText}>
-        $ {Math.round(price * amount * 100) / 100}
-      </Text>
-    </Pressable>
+    <IndividualItemContainer style={styles.container}>
+      <Pressable
+        style={({ pressed }) => [
+          styles.pressableContainer,
+          pressed && { opacity: 0.5 },
+        ]}
+        onPress={onPressFuelingEntry}
+      >
+        <Text style={styles.pressableText}>
+          {date
+            .split("-")
+            .map((item) => (item.length === 1 ? "0" + item : item))
+            .join("-")}
+        </Text>
+        <Text style={styles.pressableText}>$ {price.toFixed(2)} / L</Text>
+        <Text style={styles.pressableText}>{amount.toFixed(2)} L</Text>
+        <Text style={styles.pressableText}>
+          $ {(Math.round(price * amount * 100) / 100).toFixed(2)}
+        </Text>
+      </Pressable>
+    </IndividualItemContainer>
   );
 };
 
@@ -46,21 +60,21 @@ export default ListItem;
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: "2.5%",
-    marginRight: "2.5%",
-    paddingLeft: "2.5%",
-    paddingRight: "2.5%",
-    marginTop: 4,
-    marginBottom: 4,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 5,
+    marginHorizontal: 5,
+    marginVertical: 5,
+    width: "(100% - 10px)",
+  },
+  pressableContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: colors.info,
-    borderRadius: 10,
-    height: 40,
+    width: "100%",
   },
-  infoText: {
+  pressableText: {
+    color: colors.infoDark,
     fontSize: fontSizes.normal,
-    color: colors.infoText,
   },
 });

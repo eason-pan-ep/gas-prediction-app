@@ -8,23 +8,22 @@
 // This screen contains 1 button (on the header):
 // // 1. "+" - navigate to the Add a Fueling Entry screen.
 
-import { View, Text, FlatList } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
-import CustomPressable from '../components/CustomPressable';
-import ListItem from '../components/ListItem';
-
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, database } from '../firebase/firebaseSetup';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
-
+import CustomPressable from "../components/CustomPressable";
+import ListItem from "../components/ListItem";
+import { auth, database } from "../firebase/firebaseSetup";
+import { colors } from "../styles/colors";
 
 export default function FuelingHistory({ navigation }) {
   // state variable for storing the user's fueling history data read from the database
   const [fuelingList, setFuelingList] = useState([]);
 
   //Function to handle on press of the add fueling entry button
-  function onPressAddFuelingEntry(){
+  function onPressAddFuelingEntry() {
     //Navigate to the Add a Fueling Entry screen
     navigation.navigate("Edit Fueling Entry");
   }
@@ -40,34 +39,55 @@ export default function FuelingHistory({ navigation }) {
 
     // listen for changes to the fueling history data
     const fuelingHistoryListener = onSnapshot(
-      query(collection(database, "fuelingHistory"), where("user", "==", auth.currentUser.uid)),
+      query(
+        collection(database, "fuelingHistory"),
+        where("user", "==", auth.currentUser.uid)
+      ),
       (snapshot) => {
         let updatedData = [];
         snapshot.forEach((doc) => {
           // append the fueling entry data to the state variable
-          const fuelingEntryData = {...doc.data(), docID: doc.id}
+          const fuelingEntryData = { ...doc.data(), docID: doc.id };
           updatedData.push(fuelingEntryData);
         });
         //sort the list by date and set the state variable
-        updatedData.sort((a, b) => (a.date > b.date) ? -1 : 1);
+        updatedData.sort((a, b) => (a.date > b.date ? -1 : 1));
         setFuelingList(updatedData);
       },
       (error) => {
         console.log("Error getting fueling history data: ", error);
-      });
-  }, [navigation])
-
+      }
+    );
+  }, [navigation]);
 
   // The main render
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
       {/* the add new fueling entry button */}
-      <CustomPressable title="Add a Fueling Entry" onPress={onPressAddFuelingEntry} />
-      {/* the list of fueling entries */}
-      <FlatList 
-        data={fuelingList}
-        renderItem={(listItem) => (<ListItem fuelingEntryData={listItem.item} /> )}
+      <CustomPressable
+        title="Add a Fueling Entry"
+        onPress={onPressAddFuelingEntry}
       />
-    </View>
-  )
+      {/* the list of fueling entries */}
+      <FlatList
+        data={fuelingList}
+        renderItem={(listItem) => <ListItem fuelingEntryData={listItem.item} />}
+        style={styles.flatList}
+      />
+    </SafeAreaView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.background,
+    alignItems: "center",
+    paddingTop: 25,
+    marginHorizontal: 10,
+  },
+  flatList: {
+    width: "100%",
+    padding: 10,
+    margin: 5,
+  },
+});

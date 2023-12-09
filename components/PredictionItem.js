@@ -15,7 +15,7 @@ import IndividualItemContainer from "./IndividualItemContainer";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-const PredictionItem = ({ date, price, bgColor }) => {
+const PredictionItem = ({ date, price }) => {
   return (
     <View style={styles.container}>
       <View style={styles.containerRow}>
