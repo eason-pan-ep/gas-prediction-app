@@ -9,26 +9,23 @@
 
 import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
+import { getDateList, getSuggestedDate } from "../utility/predictionUtil";
+import { auth, database } from "../firebase/firebaseSetup";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 import PredictionItem from "../components/PredictionItem";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-
-import { colors } from "../styles/colors";
-import { fontSizes } from "../styles/fontSizes";
-
 import {
   generateRandomLocation,
   generateDummyPrediction,
 } from "../utility/randomDummyPredictionData";
-import { getDateList, getSuggestedDate } from "../utility/predictionUtil";
-
-import { auth, database } from "../firebase/firebaseSetup";
-import { collection, query, where, getDocs } from "firebase/firestore";
 import {
   writeToPredictionData,
   clearUserPredictionCache,
 } from "../firebase/firestoreHelper";
+import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function Prediction({ navigation }) {
   const [suggestedDate, setSuggestedDate] = useState("");
@@ -105,41 +102,29 @@ export default function Prediction({ navigation }) {
 
   // The main render
   return (
-    <View>
+    <View style={styles.container}>
+      <Text style={styles.suggestionText}>Prediction for city of</Text>
+      <Text style={styles.headerText}>{city}</Text>
       {predictions.length === 0 ? null : (
         <>
-          <Text style={styles.header}>Prediction for city of {city}</Text>
-          <PredictionItem
-            date={fiveDays[0]}
-            price={`$ ${predictions[0]} / L`}
-          />
-          <PredictionItem
-            date={fiveDays[1]}
-            price={`$ ${predictions[1]} / L`}
-          />
-          <PredictionItem
-            date={fiveDays[2]}
-            price={`$ ${predictions[2]} / L`}
-          />
-          <PredictionItem
-            date={fiveDays[3]}
-            price={`$ ${predictions[3]} / L`}
-          />
-          <PredictionItem
-            date={fiveDays[4]}
-            price={`$ ${predictions[4]} / L`}
-          />
+          {[0, 1, 2, 3, 4].map((index) => (
+            <PredictionItem
+              key={index}
+              date={fiveDays[index]}
+              price={`$ ${predictions[index].toFixed(2)} / L`}
+            />
+          ))}
         </>
       )}
       {suggestedDate === "" ? (
-        <View>
+        <>
           <Text style={styles.suggestionText}>
             Getting Predictions
             {"\n"}
             This may take a few minutes...
           </Text>
           <ActivityIndicator size="large" color={colors.primary} />
-        </View>
+        </>
       ) : (
         <Text style={styles.suggestionText}>
           Fill up on {suggestedDate} {"\n"}potentially saves your money
@@ -157,29 +142,29 @@ export default function Prediction({ navigation }) {
           navigation.goBack();
         }}
       />
-      <View style={styles.clearButtonContainer}>
-        <SubtlePressable title={"Clear Cache"} onPress={onPressClearCache} />
-      </View>
+      <SubtlePressable title={"Clear Cache"} onPress={onPressClearCache} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
+  container: {
+    height: "100%",
+    backgroundColor: colors.background,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  headerText: {
+    color: colors.infoDark,
+    fontSize: fontSizes.extraLarge,
+    fontWeight: "bold",
     textAlign: "center",
-    fontSize: fontSizes.large,
-    marginTop: 20,
-    marginBottom: 20,
   },
   suggestionText: {
-    marginTop: 20,
-    marginBottom: 20,
     textAlign: "center",
-    fontSize: fontSizes.large,
-    color: colors.primaryDark,
-  },
-  clearButtonContainer: {
-    alignItems: "center",
-    marginTop: 20,
+    fontSize: fontSizes.normal,
+    color: colors.infoDark,
   },
 });
