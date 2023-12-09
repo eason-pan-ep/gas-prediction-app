@@ -74,10 +74,10 @@ const HomeStackNavigator = () => {
         name="Edit Fueling Entry"
         component={EditFuelingEntry}
       />
-      <HomeStack.Screen
-        name="Nearby Gas Stations"
+      {/* <HomeStack.Screen
+        name="Gas Stations"
         component={NearbyGasStations}
-      />
+      /> */}
       <HomeStack.Screen name="Fueling History" component={FuelingHistory} />
     </HomeStack.Navigator>
   );

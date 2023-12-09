@@ -9,13 +9,12 @@
 // This screen contains 1 button:
 // // 1. Edit - navigates to the Edit Profile screen.
 
-import { View, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { auth, database } from "../firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
 
+import { auth, database } from "../firebase/firebaseSetup";
 import CustomPressable from "../components/CustomPressable";
 import StaticField from "../components/StaticField";
 import {
@@ -23,6 +22,7 @@ import {
   calculateAverageAmountSpent,
   calculateLowestPricePaid,
 } from "../utility/fuelingStatCalculation";
+import { colors } from "../styles/colors";
 
 export default function Profile({ navigation }) {
   // state variables for storing user profile information fetched from the database
@@ -45,7 +45,10 @@ export default function Profile({ navigation }) {
     // listen for changes to the user profile data
     const userProfileListener = onSnapshot(
       // get the user profile data matches current uid from the database
-      query(collection(database, "userProfiles"), where("user", "==", auth.currentUser.uid)),
+      query(
+        collection(database, "userProfiles"),
+        where("user", "==", auth.currentUser.uid)
+      ),
       (snapshot) => {
         snapshot.forEach((doc) => {
           // store the user profile data in the state variable
@@ -61,9 +64,9 @@ export default function Profile({ navigation }) {
       },
       (error) => {
         console.log("Error getting user profile data: ", error);
-      });
+      }
+    );
   }, [navigation]);
-
 
   // This is a dummy fueling history for testing purposes.
   const userFuelingHistory = [
@@ -86,6 +89,7 @@ export default function Profile({ navigation }) {
       photo: null,
     },
   ];
+
   const totalAmountSpent = calculateTotalAmountSpent(userFuelingHistory);
   const averageAmountSpentPerL =
     calculateAverageAmountSpent(userFuelingHistory);
@@ -97,7 +101,7 @@ export default function Profile({ navigation }) {
     navigation.navigate("Edit Profile", {
       userProfileData: userProfile,
     });
-  }
+  };
 
   // This function is called when the Change Password button is pressed.
   // This function should navigate to the Change Password screen.
@@ -105,29 +109,59 @@ export default function Profile({ navigation }) {
     navigation.navigate("Change Password");
   };
 
-
-
   // The main render
   return (
-    <View>
-      <StaticField label="Email" value={userProfile.email} />
-      <StaticField label="Car Make" value={userProfile.carMake} />
-      <StaticField label="Car Model" value={userProfile.carModel} />
-      <StaticField label="Gas Type" value={userProfile.gasType} />
-      <StaticField
-        label="Total Amount Spent"
-        value={"$" + totalAmountSpent.toFixed(2)}
-      />
-      <StaticField
-        label="Average Price Paid"
-        value={"$" + averageAmountSpentPerL.toFixed(2) + "/L"}
-      />
-      <StaticField
-        label="Lowest Price Paid"
-        value={"$" + lowestPricePaidPerL.toFixed(2) + "/L"}
-      />
-      <CustomPressable title="Edit" onPress={onPressEdit} />
-      <CustomPressable title="Change Password" onPress={onPressChangePassword} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.staticFieldContainer}>
+        <StaticField label="Email" value={userProfile.email} />
+        <StaticField label="Car Make" value={userProfile.carMake} />
+        <StaticField label="Car Model" value={userProfile.carModel} />
+        <StaticField label="Gas Type" value={userProfile.gasType} />
+        <StaticField
+          label="Total Amount Spent"
+          value={"$" + totalAmountSpent.toFixed(2)}
+        />
+        <StaticField
+          label="Average Price Paid"
+          value={"$" + averageAmountSpentPerL.toFixed(2) + "/L"}
+        />
+        <StaticField
+          label="Lowest Price Paid"
+          value={"$" + lowestPricePaidPerL.toFixed(2) + "/L"}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <CustomPressable
+          title="Edit"
+          onPress={onPressEdit}
+          style={{ minWidth: "20%" }}
+        />
+        <CustomPressable
+          title="Change Password"
+          onPress={onPressChangePassword}
+          style={{ minWidth: "20%" }}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: "stretch",
+    paddingTop: 20,
+  },
+  staticFieldContainer: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+});

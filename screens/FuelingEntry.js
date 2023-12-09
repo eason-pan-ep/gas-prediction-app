@@ -127,13 +127,13 @@ export default function FuelingEntry({ navigation, route }) {
         <CustomPressable
           title={"Edit"}
           onPress={onPressEdit}
-          style={{ minWidth: "30%" }}
+          style={{ minWidth: "20%" }}
         />
         <CustomPressable
           title={"Delete"}
           onPress={onPressDelete}
           style={{
-            minWidth: "30%",
+            minWidth: "20%",
             backgroundColor: colors.background,
             borderColor: colors.error,
             borderWidth: 2,

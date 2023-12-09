@@ -8,7 +8,6 @@
 // // 3. Clear Cache - clears the cache of the prediction data.
 
 import {
-  View,
   Text,
   StyleSheet,
   Alert,
@@ -134,13 +133,14 @@ export default function Prediction({ navigation }) {
         </>
       ) : (
         <Text style={styles.suggestionText}>
-          Fill up on <Text style={{fontWeight: "bold"}}>{suggestedDate}</Text> {"\n"} will potentially saves your money
+          Fill up on <Text style={{ fontWeight: "bold" }}>{suggestedDate}</Text>{" "}
+          {"\n"} will potentially saves your money
         </Text>
       )}
       <CustomPressable
         title={"Nearby Gas Stations"}
         onPress={() => {
-          navigation.navigate("Nearby Gas Stations");
+          navigation.navigate("Gas Stations");
         }}
       />
       <CustomPressable
