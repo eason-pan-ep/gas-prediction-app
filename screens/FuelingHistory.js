@@ -8,13 +8,7 @@
 // This screen contains 1 button (on the header):
 // // 1. "+" - navigate to the Add a Fueling Entry screen.
 
-import {
-  View,
-  ScrollView,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
+import { View, FlatList, StyleSheet, SafeAreaView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";

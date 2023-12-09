@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  View,
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -109,59 +110,74 @@ export default function Prediction({ navigation }) {
   // The main render
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.suggestionText}>Prediction for city of</Text>
-      <Text style={styles.headerText}>{city}</Text>
-      {predictions.length === 0 ? null : (
-        <>
-          {[0, 1, 2, 3, 4].map((index) => (
-            <PredictionItem
-              key={index}
-              date={fiveDays[index]}
-              price={`$ ${predictions[index].toFixed(2)} / L`}
-            />
-          ))}
-        </>
-      )}
-      {suggestedDate === "" ? (
-        <>
+      <View style={styles.predictionContainer}>
+        <Text style={styles.suggestionText}>Prediction for city of</Text>
+        <Text style={styles.headerText}>{city}</Text>
+        {predictions.length === 0 ? null : (
+          <>
+            {[0, 1, 2, 3, 4].map((index) => (
+              <PredictionItem
+                key={index}
+                date={fiveDays[index]}
+                price={`$ ${predictions[index].toFixed(2)} / L`}
+              />
+            ))}
+          </>
+        )}
+        {suggestedDate === "" ? (
+          <>
+            <Text style={styles.suggestionText}>
+              Getting Predictions
+              {"\n"}
+              This may take a few minutes...
+            </Text>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </>
+        ) : (
           <Text style={styles.suggestionText}>
-            Getting Predictions
-            {"\n"}
-            This may take a few minutes...
+            Fill up on{" "}
+            <Text style={{ fontWeight: "bold" }}>{suggestedDate}</Text> {"\n"}{" "}
+            will potentially saves your money
           </Text>
-          <ActivityIndicator size="large" color={colors.primary} />
-        </>
-      ) : (
-        <Text style={styles.suggestionText}>
-          Fill up on <Text style={{ fontWeight: "bold" }}>{suggestedDate}</Text>{" "}
-          {"\n"} will potentially saves your money
-        </Text>
-      )}
-      <CustomPressable
-        title={"Nearby Gas Stations"}
-        onPress={() => {
-          navigation.navigate("Gas Stations");
-        }}
-      />
-      <CustomPressable
-        title={"Done"}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      />
-      <SubtlePressable title={"Clear Cache"} onPress={onPressClearCache} />
+        )}
+      </View>
+      <View style={styles.buttonContainer}>
+        <CustomPressable
+          title={"Nearby Gas Stations"}
+          onPress={() => {
+            navigation.navigate("Gas Stations");
+          }}
+        />
+        <CustomPressable
+          title={"Done"}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <SubtlePressable title={"Clear Cache"} onPress={onPressClearCache} />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    flex: 1,
     backgroundColor: colors.background,
+    alignItems: "stretch",
+    paddingTop: 20,
+    paddingHorizontal: 10,
+  },
+  predictionContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingTop: 10,
-    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    flexShrink: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   },
   headerText: {
     color: colors.infoDark,

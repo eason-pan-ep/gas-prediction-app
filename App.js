@@ -74,10 +74,6 @@ const HomeStackNavigator = () => {
         name="Edit Fueling Entry"
         component={EditFuelingEntry}
       />
-      {/* <HomeStack.Screen
-        name="Gas Stations"
-        component={NearbyGasStations}
-      /> */}
       <HomeStack.Screen name="Fueling History" component={FuelingHistory} />
     </HomeStack.Navigator>
   );
@@ -224,6 +220,7 @@ const stackNavigatorOptions = {
   headerStyle: styles.stackNavigator,
   headerTitleStyle: styles.stackNavigatorTitle,
   headerTitleAlign: "center",
+  headerTintColor: colors.primaryDarkText,
 };
 
 const tabNavigatorOptions = {
@@ -235,4 +232,5 @@ const tabNavigatorOptions = {
   headerStyle: styles.tabNavigatorHeader,
   headerTitleStyle: styles.tabNavigatorHeaderTitle,
   headerTitleAlign: "center",
+  headerTintColor: colors.primaryDarkText,
 };

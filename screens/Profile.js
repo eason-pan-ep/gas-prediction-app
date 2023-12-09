@@ -137,9 +137,8 @@ export default function Profile({ navigation }) {
       <View style={styles.buttonContainer}>
         <CustomPressable title={"Edit"} onPress={onPressEdit} />
         <CustomPressable
-          title={"Change\nPassword"}
+          title={"Change Password"}
           onPress={onPressChangePassword}
-          textStyle={{ fontSize: fontSizes.normal }}
         />
       </View>
     </SafeAreaView>
