@@ -12,11 +12,13 @@ import { FlatList, StyleSheet, SafeAreaView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { FontAwesome } from "@expo/vector-icons";
 
 import CustomPressable from "../components/CustomPressable";
 import ListItem from "../components/ListItem";
 import { auth, database } from "../firebase/firebaseSetup";
 import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function FuelingHistory({ navigation }) {
   // state variable for storing the user's fueling history data read from the database
@@ -67,7 +69,13 @@ export default function FuelingHistory({ navigation }) {
       <CustomPressable
         title="Add a Fueling Entry"
         onPress={onPressAddFuelingEntry}
-      />
+      >
+        <FontAwesome
+          name="plus"
+          size={fontSizes.large}
+          color={colors.primaryText}
+        />
+      </CustomPressable>
       {/* the list of fueling entries */}
       <FlatList
         data={fuelingList}

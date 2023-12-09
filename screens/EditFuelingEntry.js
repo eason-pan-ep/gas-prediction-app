@@ -292,7 +292,7 @@ export default function EditFuelingEntry({ navigation, route }) {
                 <View style={styles.buttonContainer}>
                   {/* button for removing photo */}
                   <CustomPressable
-                    title={"Remove"}
+                    title={"Remove\nPhoto"}
                     onPress={() => setPhoto("")}
                     style={{
                       minWidth: 150,
@@ -303,13 +303,15 @@ export default function EditFuelingEntry({ navigation, route }) {
                     }}
                     textStyle={{
                       color: colors.error,
+                      fontSize: fontSizes.normal,
                     }}
                   />
                   {/* button for adding photo */}
                   <CustomPressable
-                    title={"Retake"}
+                    title={"Retake\nPhoto"}
                     onPress={handleTakePhotoPress}
                     style={{ minWidth: 150 }}
+                    textStyle={{ fontSize: fontSizes.normal }}
                   />
                 </View>
               </>
@@ -415,6 +417,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingBottom: 10,
     backgroundColor: "#ffffff",
+    elevation: 10,
+    shadowColor: colors.primaryDark,
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
   },
   photoIcon: {
     marginTop: 5,

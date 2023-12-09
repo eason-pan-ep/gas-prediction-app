@@ -27,6 +27,8 @@ export default function CustomPressable({ title, onPress, style, textStyle }) {
 
 const styles = StyleSheet.create({
   pressableContainer: {
+    flexDirection: "row",
+    gap: 10,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",

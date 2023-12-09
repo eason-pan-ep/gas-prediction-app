@@ -136,7 +136,7 @@ export default function Profile({ navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <CustomPressable
-          title="Edit"
+          title={"Edit"}
           onPress={onPressEdit}
           style={{ minWidth: 150 }}
         />

@@ -11,6 +11,7 @@ import { signOut } from "firebase/auth";
 import LargePressable from "../components/LargePressable";
 import CustomPressable from "../components/CustomPressable";
 import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
@@ -37,7 +38,7 @@ export default function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <LargePressable
-        title="PREDICT GAS PRICES"
+        title={"PREDICT\nGAS PRICES!\n\n(press me)"}
         onPress={onPressPredictGasPrices}
       />
       <CustomPressable

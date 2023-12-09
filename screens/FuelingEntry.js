@@ -17,12 +17,14 @@ import {
   Image,
   StyleSheet,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getDownloadURL, ref } from "firebase/storage";
 
 import CustomPressable from "../components/CustomPressable";
 import StaticField from "../components/StaticField";
+import OdometerModalPressable from "../components/OdometerModalPressable";
 import { deleteFromFuelingHistory } from "../firebase/firestoreHelper";
 import { storage } from "../firebase/firebaseSetup";
 import { deleteEntriesWithImage } from "../firebase/storageHelper";
@@ -123,9 +125,13 @@ export default function FuelingEntry({ navigation, route }) {
         />
         <StaticField label={"Location"} value={fuelingEntryData.city} />
         {photo && (
-          <View style={styles.photoContainer}>
-            <Text style={styles.headerText}>Odometer Record</Text>
-            <Image source={{ uri: photo }} style={styles.image} />
+          <View style={styles.odometerContainer}>
+            <Text style={styles.label}>Odometer Record</Text>
+            <OdometerModalPressable
+              title={"View"}
+              imageSource={{ uri: photo }}
+              style={styles.odometerRecordPressable}
+            />
           </View>
         )}
       </View>
@@ -178,20 +184,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
   },
-  photoContainer: {
-    alignItems: "center",
-    marginVertical: 20,
-    marginHorizontal: 10,
-    borderWidth: 2,
-    borderColor: colors.primaryDark,
-    borderRadius: 30,
-    paddingBottom: 20,
+  odometerContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+    height: 50,
+    marginTop: 15,
+    marginHorizontal: 5,
   },
-  image: {
-    width: 280,
-    height: 210,
-    marginTop: 20,
-    alignSelf: "center",
-    borderRadius: 20,
+  label: {
+    color: colors.primaryDark,
+    fontSize: fontSizes.normal,
+    fontWeight: "bold",
+    height: 50,
+    paddingHorizontal: 10,
+  },
+  odometerRecordPressable: {
+    flexShrink: 1,
+    height: 30,
   },
 });
