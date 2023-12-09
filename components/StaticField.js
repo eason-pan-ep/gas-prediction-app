@@ -10,11 +10,11 @@ import React from "react";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function StaticField({ label, value, style }) {
+export default function StaticField({ label, value, style, textColor }) {
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
+      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+      <Text style={[styles.value, { color: textColor }]}>{value}</Text>
     </View>
   );
 }
@@ -27,13 +27,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   label: {
-    color: colors.backgroundText,
+    color: colors.primaryDark,
     fontSize: fontSizes.normal,
     fontWeight: "bold",
     marginRight: 10,
+    height: 25,
+    paddingHorizontal: 10,
   },
   value: {
-    color: colors.backgroundText,
+    color: colors.primaryDark,
     fontSize: fontSizes.normal,
+    height: 25,
+    paddingHorizontal: 10,
   },
 });

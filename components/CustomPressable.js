@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    minWidth: 250,
+    minWidth: 300,
     margin: 10,
     height: 60,
     paddingHorizontal: 30,
@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
   pressableText: {
     color: colors.primaryText,
     fontSize: fontSizes.large,
+    textAlign: "center",
   },
 });

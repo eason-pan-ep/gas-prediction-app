@@ -23,6 +23,7 @@ import {
   calculateLowestPricePaid,
 } from "../utility/fuelingStatCalculation";
 import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function Profile({ navigation }) {
   // state variables for storing user profile information fetched from the database
@@ -120,26 +121,30 @@ export default function Profile({ navigation }) {
         <StaticField
           label="Total Amount Spent"
           value={"$" + totalAmountSpent.toFixed(2)}
+          textColor={colors.secondaryDark}
         />
         <StaticField
           label="Average Price Paid"
           value={"$" + averageAmountSpentPerL.toFixed(2) + "/L"}
+          textColor={colors.secondaryDark}
         />
         <StaticField
           label="Lowest Price Paid"
           value={"$" + lowestPricePaidPerL.toFixed(2) + "/L"}
+          textColor={colors.secondaryDark}
         />
       </View>
       <View style={styles.buttonContainer}>
         <CustomPressable
           title="Edit"
           onPress={onPressEdit}
-          style={{ minWidth: "20%" }}
+          style={{ minWidth: 150 }}
         />
         <CustomPressable
-          title="Change Password"
+          title={"Change\nPassword"}
           onPress={onPressChangePassword}
-          style={{ minWidth: "20%" }}
+          style={{ minWidth: 150 }}
+          textStyle={{ fontSize: fontSizes.normal }}
         />
       </View>
     </SafeAreaView>
