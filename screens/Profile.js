@@ -135,15 +135,10 @@ export default function Profile({ navigation }) {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomPressable
-          title={"Edit"}
-          onPress={onPressEdit}
-          style={{ minWidth: 150 }}
-        />
+        <CustomPressable title={"Edit"} onPress={onPressEdit} />
         <CustomPressable
           title={"Change\nPassword"}
           onPress={onPressChangePassword}
-          style={{ minWidth: 150 }}
           textStyle={{ fontSize: fontSizes.normal }}
         />
       </View>
@@ -165,7 +160,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexShrink: 1,
+    alignItems: "center",
     justifyContent: "center",
     marginVertical: 10,
   },

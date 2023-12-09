@@ -104,11 +104,6 @@ export default function FuelingHistory({ navigation }) {
           />
         ))}
       </View>
-      {/* the add new fueling entry button */}
-      <CustomPressable
-        title="Add a Fueling Entry"
-        onPress={onPressAddFuelingEntry}
-      ></CustomPressable>
       {/* the list of fueling entries */}
       <FlatList
         data={fuelingList}
@@ -117,6 +112,13 @@ export default function FuelingHistory({ navigation }) {
         )}
         style={styles.flatList}
       />
+      <View style={styles.buttonContainer}>
+        {/* the add new fueling entry button */}
+        <CustomPressable
+          title="Add a Fueling Entry"
+          onPress={onPressAddFuelingEntry}
+        ></CustomPressable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -140,5 +142,11 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     margin: 5,
+  },
+  buttonContainer: {
+    flexShrink: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
   },
 });

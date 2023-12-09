@@ -136,16 +136,11 @@ export default function FuelingEntry({ navigation, route }) {
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <CustomPressable
-          title={"Edit"}
-          onPress={onPressEdit}
-          style={{ minWidth: 150 }}
-        />
+        <CustomPressable title={"Edit"} onPress={onPressEdit} />
         <CustomPressable
           title={"Delete"}
           onPress={onPressDelete}
           style={{
-            minWidth: 150,
             backgroundColor: colors.background,
             borderColor: colors.error,
             borderWidth: 2,
@@ -174,7 +169,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   buttonContainer: {
-    flexDirection: "row",
+    flexShrink: 1,
+    alignItems: "center",
     justifyContent: "center",
     marginVertical: 10,
   },
