@@ -31,13 +31,14 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.normal,
     fontWeight: "bold",
     marginRight: 10,
-    height: 25,
+    height: 20,
     paddingHorizontal: 10,
   },
   value: {
     color: colors.primaryDark,
     fontSize: fontSizes.normal,
-    height: 25,
+    height: 20,
     paddingHorizontal: 10,
+    flexShrink: 1,
   },
 });

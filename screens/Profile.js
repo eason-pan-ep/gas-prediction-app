@@ -157,12 +157,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     alignItems: "stretch",
     paddingTop: 20,
+    paddingHorizontal: 10,
   },
   staticFieldContainer: {
     flex: 1,
     alignItems: "stretch",
     justifyContent: "flex-start",
-    paddingHorizontal: 20,
   },
   buttonContainer: {
     flexDirection: "row",

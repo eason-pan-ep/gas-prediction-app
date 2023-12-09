@@ -20,49 +20,63 @@
 // // docID of the fueling entry
 //
 
+import {
+  View,
+  SafeAreaView,
+  Alert,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { getDownloadURL, ref } from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import { FontAwesome } from "@expo/vector-icons";
 
-import { View, Alert, Image, StyleSheet, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
-
-import CustomPressable from '../components/CustomPressable';
-import EditableField from '../components/EditableField';
-import DatePicker from '../components/DatePicker';
-
-import { writeToFuelingHistory, updateFuelingHistory, deleteFromFuelingHistory } from '../firebase/firestoreHelper';
-import { uploadImage, deleteEntriesWithImage, deleteImage } from '../firebase/storageHelper';
-import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../firebase/firebaseSetup';
-
-import * as ImagePicker from 'expo-image-picker';
-
-
+import CustomPressable from "../components/CustomPressable";
+import EditableField from "../components/EditableField";
+import DatePicker from "../components/DatePicker";
+import {
+  writeToFuelingHistory,
+  updateFuelingHistory,
+  deleteFromFuelingHistory,
+} from "../firebase/firestoreHelper";
+import {
+  uploadImage,
+  deleteEntriesWithImage,
+  deleteImage,
+} from "../firebase/storageHelper";
+import { storage } from "../firebase/firebaseSetup";
+import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function EditFuelingEntry({ navigation, route }) {
   // state variable for storing the camera permission status
-  const [ status, requestPermission ] = ImagePicker.useCameraPermissions();
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   // local state variable for storing the photo of the odometer
-  const [ photo, setPhoto ] = useState("");
+  const [photo, setPhoto] = useState("");
 
   // Function to check if this is a new fueling entry
   const checkIsNewEntry = () => {
-    try{
+    try {
       const test = route.params.fuelingEntryData;
       return false;
-    }catch(error){
+    } catch (error) {
       return true;
     }
   };
-  // flag for storing whether this is a new fueling entry 
+  // flag for storing whether this is a new fueling entry
   const isNewEntry = checkIsNewEntry();
-
 
   // Function to initialize the data for the fueling entry
   // If the route params contains a fueling entry data, then initialize with given data.
   // Otherwise, this is a new fueling entry.
   const initializeData = () => {
     let fuelingEntryData = null;
-    try{
+    try {
       const passedData = route.params.fuelingEntryData;
       fuelingEntryData = {
         date: passedData.date,
@@ -71,7 +85,7 @@ export default function EditFuelingEntry({ navigation, route }) {
         city: passedData.city,
         photoRef: passedData.photoRef,
       };
-    }catch(error){
+    } catch (error) {
       fuelingEntryData = {
         date: "",
         amount: "",
@@ -83,45 +97,43 @@ export default function EditFuelingEntry({ navigation, route }) {
     return fuelingEntryData;
   };
   // state variable for storing the fueling entry information
-  const[entryInfo, setEntryInfo] = useState(initializeData());
-
+  const [entryInfo, setEntryInfo] = useState(initializeData());
 
   // to get the photo url and set the photo state variable
   useEffect(() => {
     const getPhotoUrl = async () => {
-      if(entryInfo.photoRef !== ""){
-        try{
+      if (entryInfo.photoRef !== "") {
+        try {
           const reference = ref(storage, entryInfo.photoRef);
           const url = await getDownloadURL(reference);
           setPhoto(url);
-        }catch(error){
+        } catch (error) {
           console.log("Error getting photo url: ", error);
         }
       }
     };
     getPhotoUrl();
   }, []);
-  
 
   // function for handling date changes
   const handleDateChange = (date) => {
     const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    setEntryInfo({...entryInfo, date: dateStr});
+    setEntryInfo({ ...entryInfo, date: dateStr });
   };
 
   // function for handling amount changes
   const handleAmountChange = (text) => {
-    setEntryInfo({...entryInfo, amount: Number(text)});
+    setEntryInfo({ ...entryInfo, amount: Number(text) });
   };
 
   // function for handling price changes
   const handlePriceChange = (text) => {
-    setEntryInfo({...entryInfo, price: Number(text)});
+    setEntryInfo({ ...entryInfo, price: Number(text) });
   };
 
   // function for handling city changes
   const handleCityChange = (text) => {
-    setEntryInfo({...entryInfo, city: text});
+    setEntryInfo({ ...entryInfo, city: text });
   };
 
   // function for handling cancel button press
@@ -129,80 +141,94 @@ export default function EditFuelingEntry({ navigation, route }) {
     navigation.goBack();
   };
 
-
   // function for handling save button press
   const handleSavePress = () => {
     //check if there is any empty field
-    if(entryInfo.date === "" || entryInfo.amount === "" || entryInfo.price === "" || entryInfo.city === ""){
+    if (
+      entryInfo.date === "" ||
+      entryInfo.amount === "" ||
+      entryInfo.price === "" ||
+      entryInfo.city === ""
+    ) {
       //show error message
       alert("Please fill in all fields.");
       return;
     }
-    if(isNewEntry){
+    if (isNewEntry) {
       //write to Firestore fuelingHistory collection
-      if(photo !== ""){
+      if (photo !== "") {
         //upload the photo to Firebase storage and get the download url
         uploadImage(photo, entryInfo, "");
-      }else{
+      } else {
         writeToFuelingHistory(entryInfo);
       }
-    }else{
+    } else {
       // if users changed the photo, delete the old photo from Firebase storage
-      if(entryInfo.photoRef !== photo.substring(photo.lastIndexOf('/')+1)){
+      if (entryInfo.photoRef !== photo.substring(photo.lastIndexOf("/") + 1)) {
         //delete the old image from Firebase storage
         deleteImage(entryInfo.photoRef);
       }
-      if(photo !== ""){
+      if (photo !== "") {
         //upload the photo to Firebase storage and get the download url
         uploadImage(photo, entryInfo, route.params.fuelingEntryData.docID);
-      }else{
+      } else {
         //update the existing entry in Firestore fuelingHistory collection
-        const updatedEntryInfo = {...entryInfo, photoRef: ""};
-        updateFuelingHistory(updatedEntryInfo, route.params.fuelingEntryData.docID);
+        const updatedEntryInfo = { ...entryInfo, photoRef: "" };
+        updateFuelingHistory(
+          updatedEntryInfo,
+          route.params.fuelingEntryData.docID
+        );
       }
     }
     //navigate to where the user came from
     navigation.navigate("Fueling History");
   };
 
-
   // function for handling delete button press
   const handleDeletePress = () => {
     console.log("Photo ref: ", entryInfo.photoRef);
     //confirm the deletion
-    Alert.alert("Confirm to Delete", "Are you sure you want to delete this fueling entry?\n This data CANNOT be recovered afterwards.", [
-      { // if the user cancels, do nothing
-        text: "Cancel",
-        onPress: null,
-        style: "cancel"
-      },
-      { // if the user confirms, delete the fueling entry from the database and navigate to the Fueling History screen
-        text: "Delete",
-        onPress: () => {
-          if(entryInfo.photoRef !== ""){
-            // if the fueling entry has a photo, delete the photo from the firebase storage and delete the fueling entry from the database
-            deleteEntriesWithImage(route.params.fuelingEntryData.docID, entryInfo.photoRef);
-          }else{
-            // if the fueling entry does not have a photo, delete the fueling entry from the database
-            deleteFromFuelingHistory(route.params.fuelingEntryData.docID);
-          }
-          navigation.navigate("Fueling History");
+    Alert.alert(
+      "Confirm to Delete",
+      "Are you sure you want to delete this fueling entry?\n This data CANNOT be recovered afterwards.",
+      [
+        {
+          // if the user cancels, do nothing
+          text: "Cancel",
+          onPress: null,
+          style: "cancel",
         },
-        style: "destructive"
-      }
-    ]);
+        {
+          // if the user confirms, delete the fueling entry from the database and navigate to the Fueling History screen
+          text: "Delete",
+          onPress: () => {
+            if (entryInfo.photoRef !== "") {
+              // if the fueling entry has a photo, delete the photo from the firebase storage and delete the fueling entry from the database
+              deleteEntriesWithImage(
+                route.params.fuelingEntryData.docID,
+                entryInfo.photoRef
+              );
+            } else {
+              // if the fueling entry does not have a photo, delete the fueling entry from the database
+              deleteFromFuelingHistory(route.params.fuelingEntryData.docID);
+            }
+            navigation.navigate("Fueling History");
+          },
+          style: "destructive",
+        },
+      ]
+    );
   };
-  
-
 
   // function for handling take photo button press
   const handleTakePhotoPress = async () => {
-    try{
-      if(!status.granted){ // if the camera permission is not granted, request the permission
+    try {
+      if (!status.granted) {
+        // if the camera permission is not granted, request the permission
         await requestPermission();
         console.log("Camera permission requested.");
         return;
-      }else{
+      } else {
         // if the camera permission is granted, launch the camera
         const photoRes = await ImagePicker.launchCameraAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -212,53 +238,194 @@ export default function EditFuelingEntry({ navigation, route }) {
         });
         setPhoto(photoRes.assets[0].uri);
       }
-      
-    }catch(error){
+    } catch (error) {
       console.log("Take photo handler error: ", error);
     }
   };
 
-
-
   // The main render
   return (
-    <ScrollView>
-      {/* date picker goes here */}
-      <DatePicker label={"Fueling Date*"} onDateChange={handleDateChange} defaultValue={entryInfo.date}/>
-      {/* input for amount */}
-      <EditableField label={"Amount (L)*"} onChangeText={handleAmountChange} placeholder={"40"}
-        inputType={'numeric'} isPassword={false} defaultValue={String(entryInfo.amount)}
-      />
-      {/* input for price */}
-      <EditableField label={"Price ($/L)*"} onChangeText={handlePriceChange} placeholder={"1.70"} 
-        inputType={'numeric'} isPassword={false} defaultValue={String(entryInfo.price)}
-      />
-      {/* input for city */}
-      <EditableField label={"City*"} onChangeText={handleCityChange} placeholder={"Vancouver"} 
-        inputType={'default'} isPassword={false} defaultValue={entryInfo.city}
-      />
-
-      {/* image goes here */}
-      {photo && <Image source={{ uri: photo }} style={styles.image} />}
-
-      {/* button for adding photo */}
-      <CustomPressable title="Add Photo" onPress={ handleTakePhotoPress } />
-      {/* button for removing photo */}
-      <CustomPressable title="Remove Photo" onPress={()=>setPhoto("")} />
-      {/* button for saving changes */}
-      <CustomPressable title="Save" onPress={handleSavePress} />
-      {/* button for canceling changes */}
-      <CustomPressable title="Cancel" onPress={handleCancelPress} />
-      {/* button for delete the current entry */}
-      {!isNewEntry&&<CustomPressable title="Delete" onPress={handleDeletePress} />}
-    </ScrollView>
-  )
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.editableFieldContainer}>
+            {/* date picker goes here */}
+            <DatePicker
+              label={"Fueling Date*"}
+              onDateChange={handleDateChange}
+              defaultValue={entryInfo.date}
+            />
+            {/* input for amount */}
+            <EditableField
+              label={"Amount (L)*"}
+              onChangeText={handleAmountChange}
+              placeholder={"40"}
+              inputType={"numeric"}
+              isPassword={false}
+              defaultValue={String(entryInfo.amount)}
+            />
+            {/* input for price */}
+            <EditableField
+              label={"Price ($/L) *"}
+              onChangeText={handlePriceChange}
+              placeholder={"1.70"}
+              inputType={"numeric"}
+              isPassword={false}
+              defaultValue={String(entryInfo.price)}
+            />
+            {/* input for city */}
+            <EditableField
+              label={"Location*    "}
+              onChangeText={handleCityChange}
+              placeholder={"Vancouver"}
+              inputType={"default"}
+              isPassword={false}
+              defaultValue={entryInfo.city}
+            />
+          </View>
+          <View style={styles.photoContainer}>
+            <Text style={styles.header}>Odometer Record</Text>
+            {/* image goes here */}
+            {photo ? (
+              <>
+                <Image source={{ uri: photo }} style={styles.image} />
+                <View style={styles.buttonContainer}>
+                  {/* button for removing photo */}
+                  <CustomPressable
+                    title={"Remove\nPhoto"}
+                    onPress={() => setPhoto("")}
+                    style={{
+                      minWidth: 150,
+                      backgroundColor: colors.background,
+                      borderColor: colors.error,
+                      borderWidth: 2,
+                      shadowColor: colors.error,
+                    }}
+                    textStyle={{
+                      color: colors.error,
+                      fontSize: fontSizes.normal,
+                    }}
+                  />
+                  {/* button for adding photo */}
+                  <CustomPressable
+                    title={"Retake\nPhoto"}
+                    onPress={handleTakePhotoPress}
+                    style={{ minWidth: 150 }}
+                    textStyle={{ fontSize: fontSizes.normal }}
+                  />
+                </View>
+              </>
+            ) : (
+              <>
+                {/* button/icon for taking photo */}
+                <Pressable
+                  onPress={handleTakePhotoPress}
+                  style={({ pressed }) => [
+                    styles.photoIcon,
+                    pressed && { opacity: 0.5 },
+                  ]}
+                >
+                  <FontAwesome name="photo" size={150} color={colors.primary} />
+                  <Text style={styles.photoIconText}>Take Photo</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
+          <View style={styles.buttonContainer}>
+            {/* button for canceling changes */}
+            <CustomPressable
+              title={"Cancel"}
+              onPress={handleCancelPress}
+              style={{
+                minWidth: 150,
+                backgroundColor: colors.background,
+                borderColor: colors.error,
+                borderWidth: 2,
+                shadowColor: colors.error,
+              }}
+              textStyle={{
+                color: colors.error,
+              }}
+            />
+            {/* button for delete the current entry */}
+            {!isNewEntry && (
+              <CustomPressable
+                title={"Delete"}
+                onPress={handleDeletePress}
+                style={{
+                  minWidth: 150,
+                  backgroundColor: colors.background,
+                  borderColor: colors.error,
+                  borderWidth: 2,
+                  shadowColor: colors.error,
+                }}
+                textStyle={{
+                  color: colors.error,
+                }}
+              />
+            )}
+            {/* button for saving changes */}
+            <CustomPressable
+              title={"Save"}
+              onPress={handleSavePress}
+              style={{ minWidth: 150 }}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: "stretch",
+    paddingTop: 20,
+    paddingHorizontal: 10,
+  },
+  editableFieldContainer: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "flex-start",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  header: {
+    fontSize: fontSizes.large,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
+    color: colors.primaryDark,
+  },
+  photoContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginVertical: 20,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    borderColor: colors.accentDark,
+    borderRadius: 30,
+  },
+  photoIcon: {
+    marginTop: 5,
+    borderRadius: 30,
+    padding: 15,
+  },
+  photoIconText: {
+    color: colors.primaryDark,
+    textAlign: "center",
+    fontSize: fontSizes.large,
+  },
   image: {
-    width: 300,
-    height: 300,
-    alignSelf: 'center',
+    width: 280,
+    height: 210,
+    marginTop: 20,
+    alignSelf: "center",
+    borderRadius: 20,
   },
 });

@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   tabNavigator: {
     backgroundColor: colors.primaryLight,
-    height: "10%",
+    height: 70,
   },
   tabNavigatorLabel: {
     color: colors.primaryLightText,
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   tabNavigatorIcon: {
     color: colors.primaryLightText,
     fontSize: fontSizes.large,
+    marginTop: 10,
   },
   tabNavigatorHeader: {
     backgroundColor: colors.primaryDark,
