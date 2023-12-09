@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: fontSizes.normal,
     color: colors.infoDark,
-    fontWeight: "500",
+    fontWeight: "bold",
   },
 });

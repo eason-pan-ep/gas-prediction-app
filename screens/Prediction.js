@@ -134,7 +134,7 @@ export default function Prediction({ navigation }) {
         </>
       ) : (
         <Text style={styles.suggestionText}>
-          Fill up on {suggestedDate} {"\n"}potentially saves your money
+          Fill up on <Text style={{fontWeight: "bold"}}>{suggestedDate}</Text> {"\n"} will potentially saves your money
         </Text>
       )}
       <CustomPressable

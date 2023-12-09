@@ -37,7 +37,7 @@ export default function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <LargePressable
-        title="Predict Gas Prices"
+        title="PREDICT GAS PRICES"
         onPress={onPressPredictGasPrices}
       />
       <CustomPressable
@@ -51,8 +51,7 @@ export default function Home({ navigation }) {
           backgroundColor: colors.background,
           borderColor: colors.error,
           borderWidth: 2,
-          elevation: 0,
-          shadowOpacity: 0,
+          shadowColor: colors.error,
         }}
         textStyle={{
           color: colors.error,

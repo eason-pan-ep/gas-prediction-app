@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        color: colors.secondary,
+        color: colors.secondaryDark,
         fontSize: fontSizes.small,
     },
 });

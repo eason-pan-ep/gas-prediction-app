@@ -40,16 +40,16 @@ const ListItem = ({ fuelingEntryData }) => {
         ]}
         onPress={onPressFuelingEntry}
       >
-        <Text style={styles.pressableText}>
+        <Text style={[styles.pressableText, styles.dateText]}>
           {date
             .split("-")
             .map((item) => (item.length === 1 ? "0" + item : item))
             .join("-")}
         </Text>
-        <Text style={styles.pressableText}>$ {price.toFixed(2)} / L</Text>
+        <Text style={styles.pressableText}>${price.toFixed(2)} /L</Text>
         <Text style={styles.pressableText}>{amount.toFixed(2)} L</Text>
         <Text style={styles.pressableText}>
-          $ {(Math.round(price * amount * 100) / 100).toFixed(2)}
+          ${(Math.round(price * amount * 100) / 100).toFixed(2)}
         </Text>
       </Pressable>
     </IndividualItemContainer>
@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     marginHorizontal: 5,
     marginVertical: 5,
-    width: "(100% - 10px)",
+    width: "(100% - 20px)",
   },
   pressableContainer: {
     flexDirection: "row",
@@ -76,5 +76,10 @@ const styles = StyleSheet.create({
   pressableText: {
     color: colors.infoDark,
     fontSize: fontSizes.normal,
+  },
+  dateText: {
+    color: colors.accent,
+    fontSize: fontSizes.normal,
+    fontWeight: "bold",
   },
 });

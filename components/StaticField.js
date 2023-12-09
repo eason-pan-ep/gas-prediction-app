@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10,
+    marginTop: 15,
     marginHorizontal: 10,
   },
   label: {
     color: colors.backgroundText,
     fontSize: fontSizes.normal,
+    fontWeight: "bold",
     marginRight: 10,
   },
   value: {
