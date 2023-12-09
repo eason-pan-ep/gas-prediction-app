@@ -100,12 +100,12 @@ export default function EditProfile({ route, navigation }) {
           style={{
             minWidth: 150,
             backgroundColor: colors.background,
-            borderColor: colors.error,
+            borderColor: colors.primaryDark,
             borderWidth: 2,
-            shadowColor: colors.error,
+            shadowColor: colors.primaryDark,
           }}
           textStyle={{
-            color: colors.error,
+            color: colors.primaryDark,
           }}
         />
         <CustomPressable

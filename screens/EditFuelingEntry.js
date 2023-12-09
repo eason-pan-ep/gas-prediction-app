@@ -284,7 +284,7 @@ export default function EditFuelingEntry({ navigation, route }) {
             />
           </View>
           <View style={styles.photoContainer}>
-            <Text style={styles.header}>Odometer Record</Text>
+            <Text style={styles.headerText}>Odometer Record</Text>
             {/* image goes here */}
             {photo ? (
               <>
@@ -292,7 +292,7 @@ export default function EditFuelingEntry({ navigation, route }) {
                 <View style={styles.buttonContainer}>
                   {/* button for removing photo */}
                   <CustomPressable
-                    title={"Remove\nPhoto"}
+                    title={"Remove"}
                     onPress={() => setPhoto("")}
                     style={{
                       minWidth: 150,
@@ -303,15 +303,13 @@ export default function EditFuelingEntry({ navigation, route }) {
                     }}
                     textStyle={{
                       color: colors.error,
-                      fontSize: fontSizes.normal,
                     }}
                   />
                   {/* button for adding photo */}
                   <CustomPressable
-                    title={"Retake\nPhoto"}
+                    title={"Retake"}
                     onPress={handleTakePhotoPress}
                     style={{ minWidth: 150 }}
-                    textStyle={{ fontSize: fontSizes.normal }}
                   />
                 </View>
               </>
@@ -339,21 +337,28 @@ export default function EditFuelingEntry({ navigation, route }) {
               style={{
                 minWidth: 150,
                 backgroundColor: colors.background,
-                borderColor: colors.error,
+                borderColor: colors.primaryDark,
                 borderWidth: 2,
-                shadowColor: colors.error,
+                shadowColor: colors.primaryDark,
               }}
               textStyle={{
-                color: colors.error,
+                color: colors.primaryDark,
               }}
             />
+            {/* button for saving changes */}
+            <CustomPressable
+              title={"Save"}
+              onPress={handleSavePress}
+              style={{ minWidth: 150 }}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
             {/* button for delete the current entry */}
             {!isNewEntry && (
               <CustomPressable
-                title={"Delete"}
+                title={"Delete Entry"}
                 onPress={handleDeletePress}
                 style={{
-                  minWidth: 150,
                   backgroundColor: colors.background,
                   borderColor: colors.error,
                   borderWidth: 2,
@@ -364,12 +369,6 @@ export default function EditFuelingEntry({ navigation, route }) {
                 }}
               />
             )}
-            {/* button for saving changes */}
-            <CustomPressable
-              title={"Save"}
-              onPress={handleSavePress}
-              style={{ minWidth: 150 }}
-            />
           </View>
         </View>
       </ScrollView>
@@ -393,23 +392,29 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginVertical: 10,
+    marginTop: 10,
   },
-  header: {
-    fontSize: fontSizes.large,
+  buttonContainerColumn: {
+    alignContent: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  headerText: {
+    fontSize: fontSizes.normal,
     fontWeight: "bold",
     textAlign: "center",
     marginTop: 10,
     color: colors.primaryDark,
   },
   photoContainer: {
-    flex: 1,
     alignItems: "center",
-    marginVertical: 20,
+    marginTop: 20,
     marginHorizontal: 10,
     borderWidth: 2,
-    borderColor: colors.accentDark,
+    borderColor: colors.primaryDark,
     borderRadius: 30,
+    paddingBottom: 10,
+    backgroundColor: "#ffffff",
   },
   photoIcon: {
     marginTop: 5,

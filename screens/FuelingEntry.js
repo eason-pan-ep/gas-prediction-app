@@ -27,6 +27,7 @@ import { deleteFromFuelingHistory } from "../firebase/firestoreHelper";
 import { storage } from "../firebase/firebaseSetup";
 import { deleteEntriesWithImage } from "../firebase/storageHelper";
 import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function FuelingEntry({ navigation, route }) {
   // get the fueling entry data from the route params
@@ -121,7 +122,12 @@ export default function FuelingEntry({ navigation, route }) {
           ).toFixed(2)}`}
         />
         <StaticField label={"Location"} value={fuelingEntryData.city} />
-        {photo && <Image source={{ uri: photo }} style={styles.image} />}
+        {photo && (
+          <View style={styles.photoContainer}>
+            <Text style={styles.headerText}>Odometer Record</Text>
+            <Image source={{ uri: photo }} style={styles.image} />
+          </View>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <CustomPressable
@@ -166,9 +172,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: 10,
   },
+  headerText: {
+    fontSize: fontSizes.large,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  photoContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    borderColor: colors.primaryDark,
+    borderRadius: 30,
+    paddingBottom: 20,
+  },
   image: {
-    width: 300,
-    height: 300,
+    width: 280,
+    height: 210,
+    marginTop: 20,
     alignSelf: "center",
+    borderRadius: 20,
   },
 });

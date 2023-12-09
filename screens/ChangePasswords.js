@@ -118,7 +118,16 @@ const ChangePasswords = ({ navigation }) => {
         <CustomPressable
           title={"Cancel"}
           onPress={handleCancelPress}
-          style={{ minWidth: 150 }}
+          style={{
+            minWidth: 150,
+            backgroundColor: colors.background,
+            borderColor: colors.primaryDark,
+            borderWidth: 2,
+            shadowColor: colors.primaryDark,
+          }}
+          textStyle={{
+            color: colors.primaryDark,
+          }}
         />
         {/* button for changing password */}
         <CustomPressable
