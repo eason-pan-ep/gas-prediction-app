@@ -50,12 +50,27 @@ const HomeStack = createNativeStackNavigator();
 const FuelingHistoryStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
+// handles both notifications
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: true,
+    };
+  },
+});
+
 // AuthStack -- contains the Sign In screen
 const AuthStackNavigator = () => {
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
+      <AuthStack.Screen
+        name="Terms and Conditions"
+        component={TermsAndConditions}
+      />
       <AuthStack.Screen
         name="Terms and Conditions"
         component={TermsAndConditions}
@@ -170,10 +185,15 @@ export default function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
         setAuthenticated(true);
+      } else {
       } else {
         setAuthenticated(false);
       }
+    });
+  }, []);
     });
   }, []);
 
