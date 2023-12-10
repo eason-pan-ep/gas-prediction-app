@@ -153,7 +153,7 @@ const SignUp = ({ navigation }) => {
       <EditableField
         label={"Email*"}
         onChangeText={handleEmailChange}
-        placeholder={"sample@oo.com"}
+        placeholder={"john.doe@example.com"}
         inputType={"email-address"}
         isPassword={false}
       />

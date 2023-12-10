@@ -82,6 +82,7 @@ export default function SignIn({ navigation }) {
       <EditableField
         label={"Email"}
         onChangeText={handleEmailChange}
+        placeholder={"john.doe@example.com"}
         inputType={"email-address"}
         isPassword={false}
       />
@@ -89,6 +90,7 @@ export default function SignIn({ navigation }) {
       <EditableField
         label={"Password"}
         onChangeText={handlePasswordChange}
+        placeholder={"password"}
         inputType={"default"}
         isPassword={true}
       />
