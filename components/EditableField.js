@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   label: {
+    flex: 1,
     color: colors.primaryDark,
     fontSize: fontSizes.small,
     fontWeight: "bold",
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
     width: "auto",
   },
   field: {
+    flex: 1.2,
     color: colors.accentDark,
     backgroundColor: colors.secondaryLight,
     fontSize: fontSizes.small,

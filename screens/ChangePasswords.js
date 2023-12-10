@@ -89,7 +89,7 @@ const ChangePasswords = ({ navigation }) => {
         <EditableField
           label="Current Password*"
           onChangeText={handleCurrentPasswordChange}
-          placeholder={"Enter your current password"}
+          placeholder={"Enter current password"}
           defaultValue={passwordsChangeInfo.currentPassword}
           inputType={"default"}
           isPassword={true}
@@ -98,7 +98,7 @@ const ChangePasswords = ({ navigation }) => {
         <EditableField
           label="New Password*"
           onChangeText={handleNewPasswordChange}
-          placeholder={"Enter your new password"}
+          placeholder={"Enter new password"}
           defaultValue={passwordsChangeInfo.newPassword}
           inputType={"default"}
           isPassword={true}
@@ -107,7 +107,7 @@ const ChangePasswords = ({ navigation }) => {
         <EditableField
           label="Confirm Password*"
           onChangeText={handleConfirmPasswordChange}
-          placeholder={"Confirm your new password"}
+          placeholder={"Retype new password"}
           defaultValue={passwordsChangeInfo.confirmPassword}
           inputType={"default"}
           isPassword={true}

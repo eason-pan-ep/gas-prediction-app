@@ -13,18 +13,16 @@
 // // // 2. Already have an account? Sign in here. - navigates to the Sign In screen.
 //
 
-import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import Checkbox from "expo-checkbox";
 
 import EditableField from "../components/EditableField";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-import Checkbox from "expo-checkbox";
-
 import { auth } from "../firebase/firebaseSetup";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { writeToUserProfile } from "../firebase/firestoreHelper";
-
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
@@ -146,7 +144,11 @@ const SignUp = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* logo image */}
-      <Image style={styles.logo} source={require("../assets/icon.png")} />
+      <Image
+        style={styles.logo}
+        source={require("../assets/octane-oracle-icon.png")}
+      />
+      <Text style={styles.welcomeMessage}>Welcome to Octane Oracle</Text>
       {/* input for email */}
       <EditableField
         label={"Email*"}
@@ -210,7 +212,7 @@ const SignUp = ({ navigation }) => {
           onPress={() => navigation.navigate("Terms and Conditions")}
         />
       </View>
-      {/* buttons for sign up and sign in */}
+      {/* buttons for sign up */}
       <View style={styles.buttonContainer}>
         <CustomPressable title={"Sign Up"} onPress={handleSignUpPress} />
         <SubtlePressable
@@ -240,11 +242,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   logo: {
-    width: "30%",
-    height: "15%",
+    width: 128,
+    height: 128,
     alignSelf: "center",
-    marginTop: "8%",
-    marginBottom: "8%",
+    marginTop: 20,
+    marginBottom: 10,
+    borderColor: colors.primaryDark,
+    borderWidth: 2,
+    borderRadius: 20,
+  },
+  welcomeMessage: {
+    fontSize: fontSizes.extraLarge,
+    color: colors.primaryDark,
+    fontWeight: "bold",
+    alignSelf: "center",
   },
   infoReminder: {
     fontSize: fontSizes.small,
