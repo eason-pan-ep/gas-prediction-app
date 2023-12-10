@@ -27,10 +27,12 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     marginBottom: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
   },
   title: {
     color: colors.secondaryDark,
     fontSize: fontSizes.normal,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.secondaryDark,
   },
 });

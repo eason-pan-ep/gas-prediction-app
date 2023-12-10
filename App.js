@@ -64,7 +64,7 @@ Notifications.setNotificationHandler({
 // AuthStack -- contains the Sign In screen
 const AuthStackNavigator = () => {
   return (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator screenOptions={stackNavigatorOptions}>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
       <AuthStack.Screen

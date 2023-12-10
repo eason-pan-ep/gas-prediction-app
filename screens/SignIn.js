@@ -8,8 +8,7 @@
 // // // Log In - logs the user in to their account.
 //
 
-
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 
 import EditableField from "../components/EditableField";
@@ -19,8 +18,6 @@ import { colors } from "../styles/colors";
 
 import { auth } from "../firebase/firebaseSetup";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
-
 
 export default function SignIn() {
   // state variables for storing user input
@@ -44,43 +41,51 @@ export default function SignIn() {
   // // then call the firebase function to sign in
   // // if the user input is invalid, alert the user
   const handleSignInPress = async () => {
-    if(signInInfo.email === "" || signInInfo.password === ""){
+    if (signInInfo.email === "" || signInInfo.password === "") {
       alert("Please fill in all fields");
       return;
     }
-    try{
-      const userCredential = await signInWithEmailAndPassword(auth, signInInfo.email, signInInfo.password);
-      setSignInInfo({email: "", password: ""}); //reset the state variables to empty strings
-    }catch(error){
-      if(error.code === "auth/invalid-login-credentials"){
-        alert("Email and password do not match, please check them and try again.");
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        signInInfo.email,
+        signInInfo.password
+      );
+      setSignInInfo({ email: "", password: "" }); //reset the state variables to empty strings
+    } catch (error) {
+      if (error.code === "auth/invalid-login-credentials") {
+        alert(
+          "Email and password do not match, please check them and try again."
+        );
         return;
       }
     }
   };
 
-  
-  // The main render 
+  // The main render
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* logo image */}
-      <Image style={styles.logo} source={require('../assets/icon.png')} />
+      <Image style={styles.logo} source={require("../assets/icon.png")} />
       {/* input for email */}
-      <EditableField  
-        label={"Email"} onChangeText={handleEmailChange} placeholder={"sample@oo.com"}
-        inputType={'email-address'} isPassword={false}
+      <EditableField
+        label={"Email"}
+        onChangeText={handleEmailChange}
+        inputType={"email-address"}
+        isPassword={false}
       />
       {/* input for password */}
-      <EditableField  
-        label={"Password"} onChangeText={handlePasswordChange} placeholder={"password"}
-        inputType={'default'} isPassword={true}
+      <EditableField
+        label={"Password"}
+        onChangeText={handlePasswordChange}
+        inputType={"default"}
+        isPassword={true}
       />
       {/* button for sign in */}
-      <CustomPressable 
-        title={"Sign In"}
-        onPress={handleSignInPress}
-      />
-    </View>
+      <View style={styles.buttonContainer}>
+        <CustomPressable title={"Sign In"} onPress={handleSignInPress} />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -89,12 +94,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     flex: 1,
   },
-  logo: {
-    width: '30%',
-    height: '15%',
-    alignSelf: 'center',
-    marginTop: '8%',
-    marginBottom: '8%',
+  buttonContainer: {
+    marginTop: 20,
+    alignItems: "center",
   },
-
+  logo: {
+    width: "30%",
+    height: "15%",
+    alignSelf: "center",
+    marginTop: "8%",
+    marginBottom: "8%",
+  },
 });
