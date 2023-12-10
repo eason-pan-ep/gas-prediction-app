@@ -40,8 +40,8 @@ import ChangePasswords from "./screens/ChangePasswords";
 import NearbyGasStations from "./screens/NearbyGasStations";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSizes";
-
-import { auth } from './firebase/firebaseSetup';
+import * as Notifications from "expo-notifications";
+import { auth } from "./firebase/firebaseSetup";
 import { onAuthStateChanged } from "firebase/auth";
 
 const AuthStack = createNativeStackNavigator();
@@ -50,13 +50,27 @@ const HomeStack = createNativeStackNavigator();
 const FuelingHistoryStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
+// handles both notifications
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: true,
+    };
+  },
+});
+
 // AuthStack -- contains the Sign In screen
 const AuthStackNavigator = () => {
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
-      <AuthStack.Screen name="Terms and Conditions" component={TermsAndConditions} />
+      <AuthStack.Screen
+        name="Terms and Conditions"
+        component={TermsAndConditions}
+      />
     </AuthStack.Navigator>
   );
 };
@@ -67,8 +81,14 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator screenOptions={stackNavigatorOptions}>
       <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Prediction" component={Prediction} />
-      <HomeStack.Screen name="Edit Fueling Entry" component={EditFuelingEntry} />
-      <HomeStack.Screen name="Nearby Gas Stations" component={NearbyGasStations} />
+      <HomeStack.Screen
+        name="Edit Fueling Entry"
+        component={EditFuelingEntry}
+      />
+      <HomeStack.Screen
+        name="Nearby Gas Stations"
+        component={NearbyGasStations}
+      />
       <HomeStack.Screen name="Fueling History" component={FuelingHistory} />
     </HomeStack.Navigator>
   );
@@ -166,14 +186,14 @@ export default function App() {
   // Listener for authentication state changes.
   // *********************************
   useEffect(() => {
-    onAuthStateChanged(auth, (user)=>{
-      if(user){
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
         setAuthenticated(true);
-      }else{
+      } else {
         setAuthenticated(false);
       }
-    })
-  },[]);
+    });
+  }, []);
 
   return (
     <NavigationContainer>
@@ -193,7 +213,7 @@ const styles = StyleSheet.create({
   },
   tabNavigator: {
     backgroundColor: colors.primary,
-    height: '11%',
+    height: "11%",
   },
   tabNavigatorTitle: {
     color: colors.primaryText,
