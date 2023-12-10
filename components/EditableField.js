@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   },
   field: {
     flex: 1.2,
+    flexShrink: 1,
     color: colors.accentDark,
     backgroundColor: colors.secondaryLight,
     fontSize: fontSizes.small,
@@ -62,7 +63,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     textAlign: "right",
-    flexShrink: 1,
     width: "100%",
+    elevation: 10,
+    shadowColor: colors.secondaryLight,
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
   },
 });

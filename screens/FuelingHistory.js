@@ -134,8 +134,9 @@ const styles = StyleSheet.create({
   },
   flatList: {
     width: "100%",
-    padding: 10,
-    margin: 5,
+    paddingHorizontal: 10,
+    paddingBottom: 100,
+    margin: 10,
   },
   buttonContainer: {
     flexShrink: 1,

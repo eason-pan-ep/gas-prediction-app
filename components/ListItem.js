@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginHorizontal: 5,
     marginVertical: 5,
-    width: "(100% - 20px)",
+    width: "95%",
   },
   pressableContainer: {
     flexDirection: "row",

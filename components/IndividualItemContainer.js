@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
     height: 40,
     width: "100%",
     elevation: 5,
-    shadowColor: "#000000",
+    shadowColor: colors.primaryLight,
     shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 0.8,
-    shadowRadius: 10,
+    shadowRadius: 5,
   },
 });

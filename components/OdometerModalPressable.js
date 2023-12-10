@@ -117,6 +117,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: colors.primaryDarkText,
     borderWidth: 1,
-    resizeMode: "contain",
   },
 });

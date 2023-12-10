@@ -182,17 +182,16 @@ const styles = StyleSheet.create({
   },
   odometerContainer: {
     flexDirection: "row",
-    alignItems: "baseline",
+    alignItems: "center",
     justifyContent: "space-between",
-    height: 50,
-    marginTop: 15,
+    height: 40,
+    marginTop: 5,
     marginHorizontal: 5,
   },
   label: {
     color: colors.primaryDark,
     fontSize: fontSizes.normal,
     fontWeight: "bold",
-    height: 50,
     paddingHorizontal: 10,
   },
   odometerRecordPressable: {

@@ -19,7 +19,7 @@
 //          '- Nearby Gas Stations screen
 
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   tabNavigator: {
     backgroundColor: colors.primaryLight,
-    height: 70,
+    height: Platform.OS === "ios" ? 100 : 70,
   },
   tabNavigatorLabel: {
     color: colors.primaryLightText,
@@ -232,6 +232,7 @@ const stackNavigatorOptions = {
   headerTitleStyle: styles.stackNavigatorTitle,
   headerTitleAlign: "center",
   headerTintColor: colors.primaryDarkText,
+  headerBackTitleVisible: false,
 };
 
 const tabNavigatorOptions = {
@@ -244,4 +245,5 @@ const tabNavigatorOptions = {
   headerTitleStyle: styles.tabNavigatorHeaderTitle,
   headerTitleAlign: "center",
   headerTintColor: colors.primaryDarkText,
+  headerBackTitleVisible: false,
 };
