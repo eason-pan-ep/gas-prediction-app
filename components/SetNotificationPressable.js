@@ -4,13 +4,14 @@
 
 import { Entypo } from "@expo/vector-icons";
 import { Alert, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Notifications from "expo-notifications";
 
 import { colors } from "../styles/colors";
 
 export const verifyPermissions = async () => {
   const status = await Notifications.getPermissionsAsync();
+  console.log("status", status);
   if (status.granted) {
     return true;
   }
@@ -21,12 +22,27 @@ export const verifyPermissions = async () => {
 };
 
 export default function SetNotificationPressable(props) {
-  const { date } = props;
-  const [reminderTime, setReminderTime] = useState("09:00"); // Default reminder time is 9:00
+  const { date } = props; // Comment this out for testing purposes
+  // const date = new Date().toISOString().split("T")[0]; // Uncomment this for testing purposes
+  const defaultTime = "09:00"; // Default reminder time is 9:00 (Android)
+  const [reminderTime, setReminderTime] = useState("");
 
-  // // Use for testing
-  // const date = "2023-12-07";
-  // const [reminderTime, setReminderTime] = useState("23:24");
+  // Reset reminder time when page is reloaded
+  useEffect(() => {
+    setReminderTime("");
+  }, []);
+
+  // Set reminder after reminder time is updated
+  useEffect(() => {
+    if (reminderTime.length > 0) {
+      scheduleNotification(reminderTime);
+      Alert.alert(
+        "Reminder Set",
+        `You will be notified at ${reminderTime} on ${date}`,
+        [{ text: "Okay" }]
+      );
+    }
+  }, [reminderTime]);
 
   const isValidTime = (time) => {
     const [hours, minutes] = time.split(":");
@@ -48,20 +64,26 @@ export default function SetNotificationPressable(props) {
 
     const now = new Date();
     const delay = notificationTime.getTime() - now.getTime();
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Reminder to Fill Up Gas",
-        body: "Don't forget to fill up your gas tank today!",
-      },
-      trigger: {
-        seconds: delay / 1000, // Convert milliseconds to seconds
-      },
-    });
+    try {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Reminder to Fill Up Gas",
+          body: "Don't forget to fill up your gas tank today!",
+        },
+        trigger: {
+          seconds: delay / 1000, // Convert milliseconds to seconds
+        },
+      });
+      console.log(`scheduled notification at ${notificationTime}`);
+    } catch (err) {
+      console.log("schedule notification error", err);
+    }
   };
 
   const scheduleNotificationHandler = async () => {
     try {
       const hasPermission = await verifyPermissions();
+      console.log("hasPermission", hasPermission);
       if (!hasPermission) {
         Alert.alert(
           "You need to grant notification permissions to set reminders.",
@@ -74,7 +96,7 @@ export default function SetNotificationPressable(props) {
       if (Platform.OS === "ios") {
         Alert.prompt(
           "Set Reminder",
-          "Enter a time in the format HH:MM",
+          "Enter a time in the format HH:MM (24-hour clock)",
           [
             {
               text: "Cancel",
@@ -92,22 +114,16 @@ export default function SetNotificationPressable(props) {
                   return;
                 }
                 setReminderTime(time);
-                scheduleNotification(time);
               },
             },
           ],
           "plain-text",
-          reminderTime
+          reminderTime,
+          "numbers-and-punctuation"
         );
       } else {
-        scheduleNotification(reminderTime);
+        setReminderTime(defaultTime);
       }
-
-      Alert.alert(
-        "Reminder Set",
-        `You will be notified at ${reminderTime} on ${date}`,
-        [{ text: "Okay" }]
-      );
     } catch (err) {
       console.log("schedule notification error", err);
     }
