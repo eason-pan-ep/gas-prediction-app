@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 24,
     paddingHorizontal: 10,
     borderRadius: 10,
-    textAlign: "right",
+    textAlign: "left",
     width: "100%",
     elevation: 10,
     shadowColor: colors.secondaryLight,
