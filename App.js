@@ -25,6 +25,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { auth } from "./firebase/firebaseSetup";
+import { onAuthStateChanged } from "firebase/auth";
+import * as Notifications from "expo-notifications";
 
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
@@ -40,9 +43,6 @@ import ChangePasswords from "./screens/ChangePasswords";
 import NearbyGasStations from "./screens/NearbyGasStations";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSizes";
-
-import { auth } from "./firebase/firebaseSetup";
-import { onAuthStateChanged } from "firebase/auth";
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createBottomTabNavigator();
@@ -67,10 +67,6 @@ const AuthStackNavigator = () => {
     <AuthStack.Navigator>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
-      <AuthStack.Screen
-        name="Terms and Conditions"
-        component={TermsAndConditions}
-      />
       <AuthStack.Screen
         name="Terms and Conditions"
         component={TermsAndConditions}
@@ -185,15 +181,10 @@ export default function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
         setAuthenticated(true);
-      } else {
       } else {
         setAuthenticated(false);
       }
-    });
-  }, []);
     });
   }, []);
 

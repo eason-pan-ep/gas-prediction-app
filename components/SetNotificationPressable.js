@@ -134,7 +134,7 @@ export default function SetNotificationPressable(props) {
       style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
       onPress={scheduleNotificationHandler}
     >
-      <Entypo name="bell" size={24} color={colors.accentLight} />
+      <Entypo name="bell" size={24} color={colors.accent} />
     </Pressable>
   );
 }
