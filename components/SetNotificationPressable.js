@@ -11,7 +11,6 @@ import { colors } from "../styles/colors";
 
 export const verifyPermissions = async () => {
   const status = await Notifications.getPermissionsAsync();
-  console.log("status", status);
   if (status.granted) {
     return true;
   }
@@ -22,10 +21,13 @@ export const verifyPermissions = async () => {
 };
 
 export default function SetNotificationPressable(props) {
-  const { date } = props; // Comment this out for testing purposes
-  // const date = new Date().toISOString().split("T")[0]; // Uncomment this for testing purposes
+  const { date } = props;
   const defaultTime = "09:00"; // Default reminder time is 9:00 (Android)
   const [reminderTime, setReminderTime] = useState("");
+
+  // Set to current date and time for testing purposes
+  // const date = "2023-12-09"; // Uncomment this for testing purposes
+  // const defaultTime = "16:37"; // Uncomment this for testing purposes
 
   // Reset reminder time when page is reloaded
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function SetNotificationPressable(props) {
       scheduleNotification(reminderTime);
       Alert.alert(
         "Reminder Set",
-        `You will be notified at ${reminderTime} on ${date}`,
+        `You will be notified at ${reminderTime} on ${date}.`,
         [{ text: "Okay" }]
       );
     }
@@ -74,7 +76,6 @@ export default function SetNotificationPressable(props) {
           seconds: delay / 1000, // Convert milliseconds to seconds
         },
       });
-      console.log(`scheduled notification at ${notificationTime}`);
     } catch (err) {
       console.log("schedule notification error", err);
     }
@@ -83,7 +84,6 @@ export default function SetNotificationPressable(props) {
   const scheduleNotificationHandler = async () => {
     try {
       const hasPermission = await verifyPermissions();
-      console.log("hasPermission", hasPermission);
       if (!hasPermission) {
         Alert.alert(
           "You need to grant notification permissions to set reminders.",
