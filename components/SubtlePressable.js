@@ -4,16 +4,19 @@
 // // onPress - function, the function to call when the button is pressed
 //
 
-import { StyleSheet, Text, Pressable } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, Pressable } from "react-native";
+import React from "react";
 
-import { colors } from '../styles/colors';
-import { fontSizes } from '../styles/fontSizes';
+import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
-const SubtlePressable = ({title, onPress}) => {
+const SubtlePressable = ({ title, onPress }) => {
   return (
-    <Pressable onPress={onPress}>
-        <Text style={styles.title}>{title}</Text>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.container, pressed && { opacity: 0.5 }]}
+    >
+      <Text style={styles.title}>{title}</Text>
     </Pressable>
   );
 };
@@ -21,12 +24,15 @@ const SubtlePressable = ({title, onPress}) => {
 export default SubtlePressable;
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    title: {
-        color: colors.secondary,
-        fontSize: fontSizes.small,
-    },
+  container: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginHorizontal: 5,
+  },
+  title: {
+    color: colors.secondaryDark,
+    fontSize: fontSizes.normal,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.secondaryDark,
+  },
 });

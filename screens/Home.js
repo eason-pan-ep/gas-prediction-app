@@ -3,12 +3,15 @@
 // // 1. Predict Gas Prices - navigates to the Prediction screen.
 // // 2. Add Fueling Entry - navigates to the Edit Fuelling Entry screen.
 
-import { View, Text, Button } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import React from "react";
 import { auth } from "../firebase/firebaseSetup";
 import { signOut } from "firebase/auth";
 
+import LargePressable from "../components/LargePressable";
 import CustomPressable from "../components/CustomPressable";
+import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
@@ -25,26 +28,45 @@ export default function Home({ navigation }) {
 
   //
   function onPressSignOut() {
-    try{
+    try {
       auth.signOut();
-    }catch(error){
+    } catch (error) {
       console.log("error signing out: ", error);
     }
   }
 
   return (
-    <View>
-      <CustomPressable
-        title="Predict Gas Prices"
+    <SafeAreaView style={styles.container}>
+      <LargePressable
+        title={"PREDICT\nGAS PRICES!\n\n(press me)"}
         onPress={onPressPredictGasPrices}
       />
       <CustomPressable
         title="Add Fueling Entry"
         onPress={onPressAddFuelingEntry}
       />
-
-      {/* for testing purpose only, here is a logout button */}
-      <Button title="Sign Out" onPress={onPressSignOut} />
-    </View>
+      <CustomPressable
+        title="Sign Out"
+        onPress={onPressSignOut}
+        style={{
+          backgroundColor: colors.background,
+          borderColor: colors.error,
+          borderWidth: 2,
+          shadowColor: colors.error,
+        }}
+        textStyle={{
+          color: colors.error,
+        }}
+      />
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: "center",
+    paddingTop: 10,
+  },
+});

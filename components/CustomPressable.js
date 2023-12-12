@@ -5,39 +5,48 @@
 // // style - object, additional style to apply to the button
 
 import { Pressable, Text, StyleSheet } from "react-native";
+import React from "react";
 
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function CustomPressable({ title, onPress, style }) {
+export default function CustomPressable({ title, onPress, style, textStyle }) {
   return (
     <Pressable
       style={({ pressed }) => [
         styles.pressableContainer,
-        pressed && styles.pressablePressed,
         style,
+        pressed && { opacity: 0.5 },
       ]}
       onPress={onPress}
     >
-      <Text style={styles.pressableText}>{title}</Text>
+      <Text style={[styles.pressableText, textStyle]}>{title}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   pressableContainer: {
+    flexDirection: "row",
+    gap: 10,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
+    minWidth: 300,
     margin: 10,
-    padding: 10,
-    borderRadius: 10,
+    height: 60,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 30,
+    elevation: 10,
+    shadowColor: colors.primaryDark,
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   pressableText: {
     color: colors.primaryText,
     fontSize: fontSizes.large,
-  },
-  pressablePressed: {
-    backgroundColor: colors.primaryDark,
+    textAlign: "center",
   },
 });

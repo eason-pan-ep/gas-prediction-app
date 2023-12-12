@@ -8,21 +8,18 @@
 // // // Log In - logs the user in to their account.
 //
 
-
-import { View, StyleSheet, Image } from "react-native";
 import React, { useState } from "react";
+import { View, StyleSheet, Image, Text, SafeAreaView } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 import EditableField from "../components/EditableField";
 import CustomPressable from "../components/CustomPressable";
-
-import { colors } from "../styles/colors";
-
+import SubtlePressable from "../components/SubtlePressable";
 import { auth } from "../firebase/firebaseSetup";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { colors } from "../styles/colors";
+import { fontSizes } from "../styles/fontSizes";
 
-
-
-export default function SignIn() {
+export default function SignIn({ navigation }) {
   // state variables for storing user input
   const [signInInfo, setSignInInfo] = useState({
     email: "",
@@ -44,43 +41,68 @@ export default function SignIn() {
   // // then call the firebase function to sign in
   // // if the user input is invalid, alert the user
   const handleSignInPress = async () => {
-    if(signInInfo.email === "" || signInInfo.password === ""){
+    if (signInInfo.email === "" || signInInfo.password === "") {
       alert("Please fill in all fields");
       return;
     }
-    try{
-      const userCredential = await signInWithEmailAndPassword(auth, signInInfo.email, signInInfo.password);
-      setSignInInfo({email: "", password: ""}); //reset the state variables to empty strings
-    }catch(error){
-      if(error.code === "auth/invalid-login-credentials"){
-        alert("Email and password do not match, please check them and try again.");
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        signInInfo.email,
+        signInInfo.password
+      );
+      setSignInInfo({ email: "", password: "" }); //reset the state variables to empty strings
+    } catch (error) {
+      if (error.code === "auth/invalid-login-credentials") {
+        alert(
+          "Email and password do not match, please check them and try again."
+        );
         return;
       }
     }
   };
 
-  
-  // The main render 
+  // function for handling sign up button press
+  // // navigate to the sign up screen
+  const handleSignUpPress = () => {
+    setSignInInfo({ email: "", password: "" }); //reset the state variables to empty strings
+    navigation.navigate("Sign Up");
+  };
+
+  // The main render
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* logo image */}
-      <Image style={styles.logo} source={require('../assets/icon.png')} />
+      <Image
+        style={styles.logo}
+        source={require("../assets/octane-oracle-icon.png")}
+      />
+      <Text style={styles.welcomeMessage}>Welcome back to Octane Oracle</Text>
       {/* input for email */}
-      <EditableField  
-        label={"Email"} onChangeText={handleEmailChange} placeholder={"sample@oo.com"}
-        inputType={'email-address'} isPassword={false}
+      <EditableField
+        label={"Email"}
+        onChangeText={handleEmailChange}
+        placeholder={"john.doe@example.com"}
+        inputType={"email-address"}
+        isPassword={false}
       />
       {/* input for password */}
-      <EditableField  
-        label={"Password"} onChangeText={handlePasswordChange} placeholder={"password"}
-        inputType={'default'} isPassword={true}
+      <EditableField
+        label={"Password"}
+        onChangeText={handlePasswordChange}
+        placeholder={"password"}
+        inputType={"default"}
+        isPassword={true}
       />
       {/* button for sign in */}
-      <CustomPressable 
-        title={"Sign In"}
-        onPress={handleSignInPress}
-      />
-    </View>
+      <View style={styles.buttonContainer}>
+        <CustomPressable title={"Sign In"} onPress={handleSignInPress} />
+        <SubtlePressable
+          title={"Do not have an account? Sign up here."}
+          onPress={handleSignUpPress}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -89,12 +111,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     flex: 1,
   },
-  logo: {
-    width: '30%',
-    height: '15%',
-    alignSelf: 'center',
-    marginTop: '8%',
-    marginBottom: '8%',
+  buttonContainer: {
+    marginTop: 20,
+    alignItems: "center",
   },
-
+  logo: {
+    width: 128,
+    height: 128,
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 10,
+    borderColor: colors.primaryDark,
+    borderWidth: 2,
+    borderRadius: 20,
+  },
+  welcomeMessage: {
+    fontSize: fontSizes.extraLarge,
+    color: colors.primaryDark,
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
 });

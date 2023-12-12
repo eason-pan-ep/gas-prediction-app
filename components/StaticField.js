@@ -23,16 +23,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginTop: 15,
+    marginHorizontal: 5,
   },
   label: {
-    color: colors.backgroundText,
+    color: colors.primaryDark,
     fontSize: fontSizes.normal,
-    marginRight: 10,
+    fontWeight: "bold",
+    height: 20,
+    paddingHorizontal: 10,
   },
   value: {
-    color: colors.backgroundText,
+    color: colors.accentDark,
     fontSize: fontSizes.normal,
+    height: 20,
+    paddingHorizontal: 10,
+    flexShrink: 1,
   },
 });

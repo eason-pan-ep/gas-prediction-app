@@ -19,12 +19,15 @@
 //          '- Nearby Gas Stations screen
 
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { auth } from "./firebase/firebaseSetup";
+import { onAuthStateChanged } from "firebase/auth";
+import * as Notifications from "expo-notifications";
 
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
@@ -40,9 +43,6 @@ import ChangePasswords from "./screens/ChangePasswords";
 import NearbyGasStations from "./screens/NearbyGasStations";
 import { colors } from "./styles/colors";
 import { fontSizes } from "./styles/fontSizes";
-import * as Notifications from "expo-notifications";
-import { auth } from "./firebase/firebaseSetup";
-import { onAuthStateChanged } from "firebase/auth";
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createBottomTabNavigator();
@@ -64,7 +64,7 @@ Notifications.setNotificationHandler({
 // AuthStack -- contains the Sign In screen
 const AuthStackNavigator = () => {
   return (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator screenOptions={stackNavigatorOptions}>
       <AuthStack.Screen name="Sign Up" component={SignUp} />
       <AuthStack.Screen name="Sign In" component={SignIn} />
       <AuthStack.Screen
@@ -84,10 +84,6 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen
         name="Edit Fueling Entry"
         component={EditFuelingEntry}
-      />
-      <HomeStack.Screen
-        name="Nearby Gas Stations"
-        component={NearbyGasStations}
       />
       <HomeStack.Screen name="Fueling History" component={FuelingHistory} />
     </HomeStack.Navigator>
@@ -177,9 +173,6 @@ const MainStackNavigator = () => {
 };
 
 export default function App() {
-  // *********************************
-  // Temporarily set to true for testing purposes.
-  // *********************************
   const [authenticated, setAuthenticated] = useState(false);
 
   // *********************************
@@ -208,31 +201,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primaryDark,
   },
   stackNavigatorTitle: {
-    color: colors.primaryText,
+    color: colors.primaryDarkText,
     fontSize: fontSizes.extraLarge,
   },
   tabNavigator: {
-    backgroundColor: colors.primary,
-    height: "11%",
-  },
-  tabNavigatorTitle: {
-    color: colors.primaryText,
-    fontSize: fontSizes.extraLarge,
+    backgroundColor: colors.primaryLight,
+    height: Platform.OS === "ios" ? 100 : 70,
   },
   tabNavigatorLabel: {
-    color: colors.backgroundText,
-    fontSize: fontSizes.normal,
+    color: colors.primaryLightText,
+    fontSize: fontSizes.small,
     marginBottom: 10,
   },
   tabNavigatorIcon: {
-    color: colors.backgroundText,
+    color: colors.primaryLightText,
     fontSize: fontSizes.large,
+    marginTop: 10,
   },
   tabNavigatorHeader: {
     backgroundColor: colors.primaryDark,
   },
   tabNavigatorHeaderTitle: {
-    color: colors.primaryText,
+    color: colors.primaryDarkText,
     fontSize: fontSizes.extraLarge,
   },
 });
@@ -241,15 +231,19 @@ const stackNavigatorOptions = {
   headerStyle: styles.stackNavigator,
   headerTitleStyle: styles.stackNavigatorTitle,
   headerTitleAlign: "center",
+  headerTintColor: colors.primaryDarkText,
+  headerBackTitleVisible: false,
 };
 
 const tabNavigatorOptions = {
   tabBarStyle: styles.tabNavigator,
   tabBarLabelStyle: styles.tabNavigatorLabel,
   tabBarIconStyle: styles.tabNavigatorIcon,
-  tabBarActiveTintColor: colors.accentDark,
+  tabBarActiveTintColor: colors.primary,
   tabBarInactiveTintColor: colors.disabledText,
   headerStyle: styles.tabNavigatorHeader,
   headerTitleStyle: styles.tabNavigatorHeaderTitle,
   headerTitleAlign: "center",
+  headerTintColor: colors.primaryDarkText,
+  headerBackTitleVisible: false,
 };
