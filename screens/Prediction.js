@@ -62,24 +62,10 @@ export default function Prediction({ navigation }) {
         if (querySnapshot.empty) {
           //no match found => get new prediction data from the APIs
           console.log("no match found in firestore");
-          //const newPredictionData = generateDummyPrediction(city);
-          const newPredictionData = [
-            {
-              date: "2021-10-01",
-              regular: 180.9,
-              premium: 200.7,
-              diesel: 190.6,
-            },
-            {
-              date: "2021-10-02",
-              regular: 181.9,
-              premium: 202.5,
-              diesel: 194.6,
-            }
-          ]
+          const newPredictionData = generateDummyPrediction(city);
           setPredictions(newPredictionData);
           //setSuggestedDate(getSuggestedDate(newPredictionData.prices));
-          //writeToPredictionData({ ...newPredictionData, location: city });
+          writeToPredictionData(newPredictionData);
         } else {
           console.log("match found");
           querySnapshot.forEach((doc) => {
@@ -132,10 +118,10 @@ export default function Prediction({ navigation }) {
             {[0, 1].map((index) => (
               <PredictionItem
                 key={index}
-                date={predictions[index].date}
-                regular={predictions[index].regular}
-                premium={predictions[index].premium}
-                diesel={predictions[index].diesel}
+                date={new Date(predictions.date + index).toISOString().split("T")[0]}
+                regular={predictions.prices[index].regular}
+                premium={predictions.prices[index].premium}
+                diesel={predictions.prices[index].diesel}
               />
             ))}
           </>
@@ -196,6 +182,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   suggestionText: {
+    marginTop: '2.5%',
     textAlign: "center",
     fontSize: fontSizes.normal,
     color: colors.infoDark,
