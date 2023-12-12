@@ -25,6 +25,8 @@ export const getSuggestedDate = (priceList) => {
         }
     }
     const today = new Date();
-    return new Date(today.setDate(today.getDate() + minIndex)).toISOString().split("T")[0];
-    
+    return new Date(today.setDate(today.getDate() + minIndex)).toISOString().split("T")[0];  
 };
+
+
+// This async function gets the prices of gas for today and the next day, with regular, premium, and diesel prices

@@ -61,11 +61,25 @@ export default function Prediction({ navigation }) {
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
           //no match found => get new prediction data from the APIs
-          console.log("no match found");
-          const newPredictionData = generateDummyPrediction(city);
-          setPredictions(newPredictionData.prices);
-          setSuggestedDate(getSuggestedDate(newPredictionData.prices));
-          writeToPredictionData({ ...newPredictionData, location: city });
+          console.log("no match found in firestore");
+          //const newPredictionData = generateDummyPrediction(city);
+          const newPredictionData = [
+            {
+              date: "2021-10-01",
+              regular: 180.9,
+              premium: 200.7,
+              diesel: 190.6,
+            },
+            {
+              date: "2021-10-02",
+              regular: 181.9,
+              premium: 202.5,
+              diesel: 194.6,
+            }
+          ]
+          setPredictions(newPredictionData);
+          //setSuggestedDate(getSuggestedDate(newPredictionData.prices));
+          //writeToPredictionData({ ...newPredictionData, location: city });
         } else {
           console.log("match found");
           querySnapshot.forEach((doc) => {
@@ -115,16 +129,18 @@ export default function Prediction({ navigation }) {
         <Text style={styles.headerText}>{city}</Text>
         {predictions.length === 0 ? null : (
           <>
-            {[0, 1, 2, 3, 4].map((index) => (
+            {[0, 1].map((index) => (
               <PredictionItem
                 key={index}
-                date={fiveDays[index]}
-                price={`$ ${predictions[index].toFixed(2)} / L`}
+                date={predictions[index].date}
+                regular={predictions[index].regular}
+                premium={predictions[index].premium}
+                diesel={predictions[index].diesel}
               />
             ))}
           </>
         )}
-        {suggestedDate === "" ? (
+        {predictions.length === 0 ? (
           <>
             <Text style={styles.suggestionText}>
               Getting Predictions
@@ -133,13 +149,7 @@ export default function Prediction({ navigation }) {
             </Text>
             <ActivityIndicator size="large" color={colors.primary} />
           </>
-        ) : (
-          <Text style={styles.suggestionText}>
-            Fill up on{" "}
-            <Text style={{ fontWeight: "bold" }}>{suggestedDate}</Text> {"\n"}{" "}
-            will potentially saves your money
-          </Text>
-        )}
+        ) : null}
       </View>
       <View style={styles.buttonContainer}>
         <CustomPressable
