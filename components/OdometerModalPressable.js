@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     shadowColor: colors.primaryDark,
     shadowOffset: { width: 5, height: 5 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   modalImage: {
     width: 280,
