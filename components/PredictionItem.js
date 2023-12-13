@@ -17,6 +17,17 @@ import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
 const PredictionItem = ({ date, regular, premium, diesel }) => {
+  // check if all the prices are available
+  // if not, display N/A
+  if(!isFinite(Number(regular))){
+    regular = "N/A";
+  }
+  if(!isFinite(Number(premium))){
+    premium = "N/A";
+  }
+  if(!isFinite(Number(diesel))){
+    diesel = "N/A";
+  }
 
   return (
     <View style={styles.container}>
