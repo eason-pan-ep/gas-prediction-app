@@ -17,6 +17,7 @@ export const generateRandomLocation = () => {
 // This function generates a random prediction data, contains the date, location and the gas price prediction of 4 days
 export const generateDummyPrediction = (city) => {
     const date = new Date();
+    console.log(date)
     const randomLocation = city;
 
     const randomPrices = [];

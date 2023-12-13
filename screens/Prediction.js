@@ -16,42 +16,40 @@ import {
   SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getDateList, getSuggestedDate } from "../utility/predictionUtil";
 import { auth, database } from "../firebase/firebaseSetup";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 import PredictionItem from "../components/PredictionItem";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-import {
-  generateRandomLocation,
-  generateDummyPrediction,
-} from "../utility/randomDummyPredictionData";
-import {
-  writeToPredictionData,
-  clearUserPredictionCache,
-} from "../firebase/firestoreHelper";
+import { getCity } from "../utility/predictionUtil";
+import { generateRandomLocation, generateDummyPrediction } from "../utility/randomDummyPredictionData";
+import { writeToPredictionData, clearUserPredictionCache } from "../firebase/firestoreHelper";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function Prediction({ navigation }) {
+export default function Prediction({ navigation, route }) {
   const [suggestedDate, setSuggestedDate] = useState("");
   const [predictions, setPredictions] = useState([]);
-  const [city, setCity] = useState(generateRandomLocation());
-  const fiveDays = getDateList();
+  const TODAY = new Date();
+
 
   useEffect(() => {
-    //get today's date
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${
-      today.getMonth() + 1
-    }-${today.getDate()}`;
+    //get today's date string
+    const todayStr = `${TODAY.getFullYear()}-${
+      TODAY.getMonth() + 1
+    }-${TODAY.getDate()}`;
 
     // try to get docs from predictionData collection that matches today's date and user's city
     // if there is no match, get new prediction data from the APIs
     // otherwise, set the state variable with the data from the database
     const getPrediction = async () => {
       try {
+        //get user's city
+        const city = route.params.city;
+
+
+
         const q = query(
           collection(database, "predictionData"),
           where("user", "==", auth.currentUser.uid),
@@ -63,15 +61,18 @@ export default function Prediction({ navigation }) {
           //no match found => get new prediction data from the APIs
           console.log("no match found in firestore");
           const newPredictionData = generateDummyPrediction(city);
-          setPredictions(newPredictionData);
-          //setSuggestedDate(getSuggestedDate(newPredictionData.prices));
+          setPredictions(newPredictionData.prices);
           writeToPredictionData(newPredictionData);
         } else {
           console.log("match found");
           querySnapshot.forEach((doc) => {
             const predictionData = doc.data();
-            setPredictions(predictionData.prices);
-            setSuggestedDate(getSuggestedDate(predictionData.prices));
+            let data=[];
+            for(object in predictionData.prices){
+              data.push(predictionData.prices[object])
+            }
+            console.log(data)
+            setPredictions(data);
           });
         }
       } catch (error) {
@@ -118,10 +119,10 @@ export default function Prediction({ navigation }) {
             {[0, 1].map((index) => (
               <PredictionItem
                 key={index}
-                date={new Date(predictions.date + index).toISOString().split("T")[0]}
-                regular={predictions.prices[index].regular}
-                premium={predictions.prices[index].premium}
-                diesel={predictions.prices[index].diesel}
+                date={`${TODAY.getFullYear()}-${TODAY.getMonth() + 1}-${TODAY.getDate() + index}`}
+                regular={predictions[index].regular}
+                premium={predictions[index].premium}
+                diesel={predictions[index].diesel}
               />
             ))}
           </>

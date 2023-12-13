@@ -8,7 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 const GetLocationButton = ({ locationReturnHandler }) => {
     const [status, requestPermission] = Location.useForegroundPermissions();
 
-    // This function will first call another function to ask for permission to access the device's location
+    // This function will first ask for permission to access the device's location
     // and return the location if permission is granted
     const getLocation = async () => {
         try{
