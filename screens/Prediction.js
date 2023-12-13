@@ -22,8 +22,8 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import PredictionItem from "../components/PredictionItem";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-import { getCity } from "../utility/predictionUtil";
-import { generateRandomLocation, generateDummyPrediction } from "../utility/randomDummyPredictionData";
+import { getGasPrices } from "../utility/predictionUtil";
+import { generateDummyPrediction } from "../utility/randomDummyPredictionData";
 import { writeToPredictionData, clearUserPredictionCache } from "../firebase/firestoreHelper";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
@@ -48,8 +48,6 @@ export default function Prediction({ navigation, route }) {
         //get user's city
         const city = route.params.city;
 
-
-
         const q = query(
           collection(database, "predictionData"),
           where("user", "==", auth.currentUser.uid),
@@ -60,7 +58,7 @@ export default function Prediction({ navigation, route }) {
         if (querySnapshot.empty) {
           //no match found => get new prediction data from the APIs
           console.log("no match found in firestore");
-          const newPredictionData = generateDummyPrediction(city);
+          const newPredictionData = await getGasPrices(city);
           setPredictions(newPredictionData.prices);
           writeToPredictionData(newPredictionData);
         } else {
@@ -71,7 +69,6 @@ export default function Prediction({ navigation, route }) {
             for(object in predictionData.prices){
               data.push(predictionData.prices[object])
             }
-            console.log(data)
             setPredictions(data);
           });
         }
