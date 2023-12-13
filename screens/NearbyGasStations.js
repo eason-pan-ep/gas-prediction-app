@@ -1,7 +1,4 @@
-// This is the screen that will display the nearby gas stations on a map.
-// This screen contains a map that displays the nearby gas stations.
-// This screen contains a list of the nearby gas stations.
-
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,64 +7,78 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import GetLocationButton from "../components/GetLocationButton";
 import * as Location from "expo-location";
 import { googleMapsApiKey } from "@env";
+
+import GetLocationButton from "../components/GetLocationButton";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function NearbyGasStations() {
   const [status, requestPermission] = Location.useForegroundPermissions();
   const [userLocation, setUserLocation] = useState(null);
+  const [gasStations, setGasStations] = useState([]);
 
   const defaultLocation = {
     latitude: 49.24966,
     longitude: -123.11934,
   };
 
-  // Get screen dimensions
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
 
-  // Constants for the Google Maps API
   const staticMapBaseUrl = "https://maps.googleapis.com/maps/api/staticmap";
   const zoomLevel = 13;
   const mapSize = `${windowWidth.toFixed(0)}x${windowHeight.toFixed(0)}`;
   const mapType = "roadmap";
   const userMarkerColor = "red";
-
   const [mapURI, setMapURI] = useState(
-    `${staticMapBaseUrl}?center=${defaultLocation.latitude},${defaultLocation.longitude}&zoom=${zoomLevel}&size=${mapSize}&maptype=${mapType}&markers=color:${userMarkerColor}|${defaultLocation.latitude},${defaultLocation.longitude}&key=${googleMapsApiKey}`
+    // use concatenation:
+    staticMapBaseUrl +
+      `?center=${defaultLocation.latitude},${defaultLocation.longitude}` +
+      `&zoom=${zoomLevel}` +
+      `&size=${mapSize}` +
+      `&maptype=${mapType}` +
+      `&markers=color:${userMarkerColor}|${defaultLocation.latitude},${defaultLocation.longitude}` +
+      `&key=${googleMapsApiKey}`
   );
 
-  // This function will run when the screen is first loaded
-  // It will obtain the user's location and store it in the userLocation state variable
   useEffect(() => {
-    console.log("User Location: ", userLocation);
-    getLocation();
+    setUserLocation(defaultLocation);
+    const initializeLocation = async () => {
+      await getLocation();
+    };
+    initializeLocation();
   }, []);
 
-  // Update Map URI when userLocation changes
   useEffect(() => {
+    console.log("User location changed: ", userLocation);
     if (userLocation) {
       setMapURI(
-        `${staticMapBaseUrl}?center=${userLocation.latitude},${userLocation.longitude}&zoom=${zoomLevel}&size=${mapSize}&maptype=${mapType}&markers=color:${userMarkerColor}|${userLocation.latitude},${userLocation.longitude}&key=${googleMapsApiKey}`
+        staticMapBaseUrl +
+          `?center=${userLocation.latitude},${userLocation.longitude}` +
+          `&zoom=${zoomLevel}` +
+          `&size=${mapSize}` +
+          `&maptype=${mapType}` +
+          `&markers=color:${userMarkerColor}|${userLocation.latitude},${userLocation.longitude}` +
+          `&key=${googleMapsApiKey}`
       );
-      console.log("Map URI: ", mapURI);
+      searchGasStations(userLocation);
     }
   }, [userLocation]);
 
-  // This function will ask for permission to access the device's location
   const verifyPermission = async () => {
-    console.log("Status: ", status);
-    if (status.granted) {
-      return true;
+    if (!status) {
+      const response = await requestPermission();
+      if (!response) {
+        // Handle the case where requestPermission fails
+        console.log("Permission request failed");
+        return false;
+      }
+      return response.granted;
     }
-    const response = await requestPermission();
-    return response.granted;
+    return status.granted;
   };
 
-  // This function will first call another function to ask for permission to access the device's location
-  // and return the location if permission is granted
   const getLocation = async () => {
     try {
       const hasPermission = await verifyPermission();
@@ -77,9 +88,7 @@ export default function NearbyGasStations() {
         );
         return;
       }
-      // get the current location
       const currentLocation = await Location.getCurrentPositionAsync();
-      console.log("Location Pressed: ", currentLocation);
       setUserLocation({
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
@@ -94,6 +103,18 @@ export default function NearbyGasStations() {
     getLocation();
   };
 
+  const searchGasStations = async (location) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=5000&type=gas_station&key=${googleMapsApiKey}`
+      );
+      const data = await response.json();
+      setGasStations(data.results);
+    } catch (error) {
+      console.error("Error searching gas stations:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {userLocation && (
@@ -102,6 +123,9 @@ export default function NearbyGasStations() {
         </Text>
       )}
       {userLocation && <Image source={{ uri: mapURI }} style={styles.image} />}
+      {gasStations.map((station) => (
+        <Text key={station.place_id}>{station.name}</Text>
+      ))}
       <GetLocationButton locationReturnHandler={getLocationHandler} />
     </SafeAreaView>
   );
