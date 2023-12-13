@@ -2,16 +2,42 @@
 // This screen contains a map that displays the nearby gas stations.
 // This screen contains a list of the nearby gas stations.
 
-import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import GetLocationButton from "../components/GetLocationButton";
-import { getLatitude, getLongitude } from "../utility/deviceLocationUtil";
 import * as Location from "expo-location";
 import { googleMapsApiKey } from "@env";
 
 export default function NearbyGasStations() {
-  const [userLocation, setUserLocation] = useState(null);
   const [status, requestPermission] = Location.useForegroundPermissions();
+  const [userLocation, setUserLocation] = useState(null);
+
+  const defaultLocation = {
+    latitude: 49.24966,
+    longitude: -123.11934,
+  };
+
+  // Get screen dimensions
+  const windowWidth = Dimensions.get("window").width;
+  const windowHeight = Dimensions.get("window").height;
+
+  // Constants for the Google Maps API
+  const staticMapBaseUrl = "https://maps.googleapis.com/maps/api/staticmap";
+  const zoomLevel = 13;
+  const mapSize = `${windowWidth.toFixed(0)}x${windowHeight.toFixed(0)}`;
+  const mapType = "roadmap";
+  const userMarkerColor = "red";
+
+  const [mapURI, setMapURI] = useState(
+    `${staticMapBaseUrl}?center=${defaultLocation.latitude},${defaultLocation.longitude}&zoom=${zoomLevel}&size=${mapSize}&maptype=${mapType}&markers=color:${userMarkerColor}|${defaultLocation.latitude},${defaultLocation.longitude}&key=${googleMapsApiKey}`
+  );
 
   // This function will run when the screen is first loaded
   // It will obtain the user's location and store it in the userLocation state variable
@@ -20,8 +46,19 @@ export default function NearbyGasStations() {
     getLocation();
   }, []);
 
+  // Update Map URI when userLocation changes
+  useEffect(() => {
+    if (userLocation) {
+      setMapURI(
+        `${staticMapBaseUrl}?center=${userLocation.latitude},${userLocation.longitude}&zoom=${zoomLevel}&size=${mapSize}&maptype=${mapType}&markers=color:${userMarkerColor}|${userLocation.latitude},${userLocation.longitude}&key=${googleMapsApiKey}`
+      );
+      console.log("Map URI: ", mapURI);
+    }
+  }, [userLocation]);
+
   // This function will ask for permission to access the device's location
   const verifyPermission = async () => {
+    console.log("Status: ", status);
     if (status.granted) {
       return true;
     }
@@ -58,30 +95,22 @@ export default function NearbyGasStations() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>NearbyGasStations</Text>
+    <SafeAreaView style={styles.container}>
       {userLocation && (
         <Text>
           Location: {userLocation.latitude}, {userLocation.longitude}
         </Text>
       )}
-      {userLocation && (
-        <Image
-          source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${userLocation.latitude},${userLocation.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${userLocation.latitude},${userLocation.longitude}&key=${googleMapsApiKey}`,
-          }}
-          style={styles.image}
-        />
-      )}
+      {userLocation && <Image source={{ uri: mapURI }} style={styles.image} />}
       <GetLocationButton locationReturnHandler={getLocationHandler} />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
   },
   image: {
     width: "100%",
