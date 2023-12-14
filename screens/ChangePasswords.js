@@ -58,6 +58,10 @@ const ChangePasswords = ({ navigation }) => {
       alert("Please fill in all fields");
       return;
     }
+    if(passwordsChangeInfo.newPassword.length < 6){
+      alert("Password must be at least 6 characters");
+      return;
+    }
     //verify the current password is correct
     const isVerified = await verifyPassword(
       passwordsChangeInfo.currentPassword
@@ -74,11 +78,19 @@ const ChangePasswords = ({ navigation }) => {
       return;
     }
     //update the password in firebase authentication
-    await changePassWords(passwordsChangeInfo.newPassword);
+    try{
+      await changePassWords(passwordsChangeInfo.newPassword);
+      
+    }catch(error){
+      alert("Something went wrong: ", error)
+      return;
+    }
     alert("Password changed successfully");
+    navigation.navigate("Profile");
+    
 
     //navigate back to the previous screen
-    navigation.navigate("Profile");
+    
   };
 
   // The main render
