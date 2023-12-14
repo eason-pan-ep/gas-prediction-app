@@ -123,8 +123,11 @@ export default function NearbyGasStations() {
   return (
     <SafeAreaView style={styles.container}>
       <GetLocationButton locationReturnHandler={getLocationHandler} />
-      {htmlMap && <WebView source={{ html: htmlMap }} style={styles.webView} />}
-      {/* Add spinner icon in the middle of the screen when loading */}
+      <View style={styles.webViewContainer}>
+        {htmlMap && (
+          <WebView source={{ html: htmlMap }} style={styles.webView} />
+        )}
+      </View>
       <View style={styles.activityIndicatorContainer}>
         <ActivityIndicator
           size="large"
@@ -143,12 +146,20 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#ffffff",
   },
+  webViewContainer: {
+    flexGrow: 1,
+    width: "100%",
+    position: "absolute",
+    bottom: 0, // Position at the bottom
+    height: "110%", // Set the height as desired
+  },
   webView: {
     flexGrow: 1,
     width: "100%",
     height: "100%",
   },
   activityIndicatorContainer: {
+    zIndex: 1,
     position: "absolute",
     top: "50%",
     left: "50%",
