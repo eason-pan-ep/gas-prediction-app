@@ -22,6 +22,7 @@ export default function NearbyGasStations() {
   const [userLocation, setUserLocation] = useState(defaultLocation);
   const [loading, setLoading] = useState(false);
   const [htmlMap, setHtmlMap] = useState("");
+  const [htmlMapKey, setHtmlMapKey] = useState(0);
 
   useEffect(() => {
     const initializeLocation = async () => {
@@ -76,6 +77,7 @@ export default function NearbyGasStations() {
   };
 
   const updateHtmlMap = () => {
+    setHtmlMapKey(htmlMapKey + 1);
     const uri =
       `https://www.google.com/maps/embed/v1/search?` +
       `q=Gas%20Station` +
@@ -94,7 +96,7 @@ export default function NearbyGasStations() {
     body {
       height: 100%;
       margin: 0;
-      overflow: hidden; /* Optional: Prevents scrollbars */
+      overflow: hidden;
     }
 
     iframe {
@@ -125,7 +127,12 @@ export default function NearbyGasStations() {
       <GetLocationButton locationReturnHandler={getLocationHandler} />
       <View style={styles.webViewContainer}>
         {htmlMap && (
-          <WebView source={{ html: htmlMap }} style={styles.webView} />
+          <WebView
+            originWhitelist={["*"]}
+            source={{ html: htmlMap }}
+            style={styles.webView}
+            key={htmlMapKey}
+          />
         )}
       </View>
       <View style={styles.activityIndicatorContainer}>
@@ -163,5 +170,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "50%",
     left: "50%",
+    transform: [{ translateX: -12 }, { translateY: -12 }],
   },
 });
