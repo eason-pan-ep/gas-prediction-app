@@ -19,13 +19,8 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
   // This function should navigate to the Prediction screen.
-  async function onPressPredictGasPrices(location) {
-    const coordinate = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    }
-    city = await getCity(coordinate);
-    navigation.navigate("Prediction", { city: city });
+  async function onPressPredictGasPrices() {
+    navigation.navigate("Prediction");
 
   }
 

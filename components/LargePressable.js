@@ -7,34 +7,13 @@
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import React from "react";
 
-import * as Location from "expo-location";
-
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-import { getCity } from "../utility/predictionUtil";
 
 export default function LargePressable({ title, onPress, style }) {
-  const [status, requestPermission] = Location.useForegroundPermissions();
 
-  // This function will first ask for permission to access the device's location
-  // and return the location if permission is granted
-  const getLocation = async () => {
-    try{
-      // ask for permission to access the device's location
-      if(!status.granted){
-        await requestPermission();
-        console.log("No permission, requesting permission, click button again");
-      }else{
-        // get the current location
-        const location = await Location.getCurrentPositionAsync();
-        onPress(location);
-   
-      }
-    }catch(error){
-      console.log("Error getting user location(prediction): ", error);
-    }
-  }
+  
 
   return (
     <Pressable
@@ -43,7 +22,7 @@ export default function LargePressable({ title, onPress, style }) {
         style,
         pressed && { opacity: 0.8 },
       ]}
-      onPress={getLocation}
+      onPress={onPress}
     >
       <View style={styles.outerCircle}>
         <View style={styles.innerCircle}>

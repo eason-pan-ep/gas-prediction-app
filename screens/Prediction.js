@@ -22,16 +22,42 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import PredictionItem from "../components/PredictionItem";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-import { getGasPrices } from "../utility/predictionUtil";
-import { generateDummyPrediction } from "../utility/randomDummyPredictionData";
+import { getGasPrices, getCity } from "../utility/predictionUtil";
 import { writeToPredictionData, clearUserPredictionCache } from "../firebase/firestoreHelper";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-export default function Prediction({ navigation, route }) {
-  const [suggestedDate, setSuggestedDate] = useState("");
+import * as Location from "expo-location";
+
+
+
+export default function Prediction({ navigation }) {
+  const [status, requestPermission] = Location.useForegroundPermissions();
   const [predictions, setPredictions] = useState([]);
+  const [city, setCity] = useState("");
   const TODAY = new Date();
+
+  // This function will first ask for permission to access the device's location
+  // and return the location if permission is granted
+  const getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync();
+    return location;
+    try{
+      // ask for permission to access the device's location
+      console.log("status: ", status)
+      if(!status.granted){
+        await requestPermission();
+        console.log("No permission, requesting permission, click button again");
+      }else{
+        // get the current location
+        const location = await Location.getCurrentPositionAsync();
+        return location;
+   
+      }
+    }catch(error){
+      console.log("Error getting user location(prediction): ", error);
+    }
+  }
 
 
   useEffect(() => {
@@ -46,13 +72,19 @@ export default function Prediction({ navigation, route }) {
     const getPrediction = async () => {
       try {
         //get user's city
-        const city = route.params.city;
-        if(!city.includes("Vancouver")){
+        const location = await getLocation();
+        const coordinate = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }
+        const findCity = await getCity(coordinate);
+        
+        if(!findCity.includes("Vancouver")){
           Alert.alert("Prediction is only available for Vancouver, BC");
           navigation.goBack();
           return;
         }
-
+        setCity(findCity);
         const q = query(
           collection(database, "predictionData"),
           where("user", "==", auth.currentUser.uid),
@@ -115,7 +147,7 @@ export default function Prediction({ navigation, route }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.predictionContainer}>
         <Text style={styles.suggestionText}>Prediction for city of</Text>
-        <Text style={styles.headerText}>{city}</Text>
+        {city&&<Text style={styles.headerText}>{city}</Text>}
         {predictions.length === 0 ? null : (
           <>
             {[0, 1].map((index) => (
