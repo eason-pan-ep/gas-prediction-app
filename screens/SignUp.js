@@ -14,13 +14,21 @@
 //
 
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  Alert,
+} from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import Checkbox from "expo-checkbox";
 
 import EditableField from "../components/EditableField";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
+import { termsAndConditionsContent } from "../utility/termsAndConditionsContent";
 import { auth } from "../firebase/firebaseSetup";
 import { writeToUserProfile } from "../firebase/firestoreHelper";
 import { colors } from "../styles/colors";
@@ -140,6 +148,29 @@ const SignUp = ({ navigation }) => {
     navigation.navigate("Sign In");
   };
 
+  //function for handling terms and conditions press
+  const handleSubtlePressablePress = () => {
+    // Popup a modal with the terms and conditions
+    Alert.alert(
+      "Terms and Conditions\nLast Updated: [2013-12-13]",
+      termsAndConditionsContent,
+      [
+        {
+          text: "Agree",
+          onPress: () => {
+            setSignUpInfo({ ...signUpInfo, isChecked: true });
+          },
+        },
+        {
+          text: "Cancel",
+          onPress: () => {
+            setSignUpInfo({ ...signUpInfo, isChecked: false });
+          },
+        },
+      ]
+    );
+  };
+
   //main render
   return (
     <SafeAreaView style={styles.container}>
@@ -209,7 +240,7 @@ const SignUp = ({ navigation }) => {
         <Text> Agree on</Text>
         <SubtlePressable
           title={"terms and conditions"}
-          onPress={() => navigation.navigate("Terms and Conditions")}
+          onPress={handleSubtlePressablePress}
         />
       </View>
       {/* buttons for sign up */}
