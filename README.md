@@ -10,6 +10,10 @@ Group project for CS5520, fall 2023.
 ## Team Member
 Macarious Kin Fung Hui, Yuchen Pan (Eason)
 
+## Video Walk Through
+iOS: https://youtu.be/ysbWcjvjTF0
+Android: https://youtu.be/_ejNnFcb6xQ
+
 ## Summary
 ### Iteration I - *Device Features and UI Design*
 - App navigation
