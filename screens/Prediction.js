@@ -7,14 +7,7 @@
 // // 2. Done - navigates back to the Home screen.
 // // 3. Clear Cache - clears the cache of the prediction data.
 
-import {
-  Text,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, StyleSheet, Alert, ActivityIndicator, View, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth, database } from "../firebase/firebaseSetup";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -39,21 +32,30 @@ export default function Prediction({ navigation }) {
 
   // This function will first ask for permission to access the device's location
   // and return the location if permission is granted
-  const getLocation = async () => {
-    const location = await Location.getCurrentPositionAsync();
-    return location;
-    try{
-      // ask for permission to access the device's location
-      console.log("status: ", status)
-      if(!status.granted){
-        await requestPermission();
-        console.log("No permission, requesting permission, click button again");
-      }else{
-        // get the current location
-        const location = await Location.getCurrentPositionAsync();
-        return location;
-   
+  const verifyPermission = async () => {
+    if(!status){
+      const response = await requestPermission();
+      if(!response){
+        return false;
       }
+      return response.granted;
+    }
+    return status.granted;
+  };
+
+
+  const getLocation = async () => {
+    try{
+      const hasPermission = await verifyPermission();
+      if(!hasPermission){
+        Alert.alert("Permission to access location was denied");
+        navigation.goBack();
+        return;
+      }
+      // get the current location
+      const location = await Location.getCurrentPositionAsync();
+      return location;
+      
     }catch(error){
       console.log("Error getting user location(prediction): ", error);
     }

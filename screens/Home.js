@@ -11,10 +11,7 @@ import { signOut } from "firebase/auth";
 import LargePressable from "../components/LargePressable";
 import CustomPressable from "../components/CustomPressable";
 import { colors } from "../styles/colors";
-import { fontSizes } from "../styles/fontSizes";
 
-import { getCity } from "../utility/predictionUtil";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
