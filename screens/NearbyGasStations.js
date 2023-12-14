@@ -1,69 +1,38 @@
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  Image,
   StyleSheet,
-  Dimensions,
   SafeAreaView,
+  ActivityIndicator,
+  Alert,
+  View,
 } from "react-native";
 import * as Location from "expo-location";
 import { googleMapsApiKey } from "@env";
+import { WebView } from "react-native-webview";
 
 import GetLocationButton from "../components/GetLocationButton";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { colors } from "../styles/colors";
 
 export default function NearbyGasStations() {
   const [status, requestPermission] = Location.useForegroundPermissions();
-  const [userLocation, setUserLocation] = useState(null);
-  const [gasStations, setGasStations] = useState([]);
-
   const defaultLocation = {
     latitude: 49.24966,
     longitude: -123.11934,
   };
-
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
-
-  const staticMapBaseUrl = "https://maps.googleapis.com/maps/api/staticmap";
-  const zoomLevel = 13;
-  const mapSize = `${windowWidth.toFixed(0)}x${windowHeight.toFixed(0)}`;
-  const mapType = "roadmap";
-  const userMarkerColor = "red";
-  const [mapURI, setMapURI] = useState(
-    // use concatenation:
-    staticMapBaseUrl +
-      `?center=${defaultLocation.latitude},${defaultLocation.longitude}` +
-      `&zoom=${zoomLevel}` +
-      `&size=${mapSize}` +
-      `&maptype=${mapType}` +
-      `&markers=color:${userMarkerColor}|${defaultLocation.latitude},${defaultLocation.longitude}` +
-      `&key=${googleMapsApiKey}`
-  );
+  const [userLocation, setUserLocation] = useState(defaultLocation);
+  const [loading, setLoading] = useState(false);
+  const [htmlMap, setHtmlMap] = useState("");
 
   useEffect(() => {
-    setUserLocation(defaultLocation);
     const initializeLocation = async () => {
       await getLocation();
     };
+    updateHtmlMap();
     initializeLocation();
   }, []);
 
   useEffect(() => {
-    console.log("User location changed: ", userLocation);
-    if (userLocation) {
-      setMapURI(
-        staticMapBaseUrl +
-          `?center=${userLocation.latitude},${userLocation.longitude}` +
-          `&zoom=${zoomLevel}` +
-          `&size=${mapSize}` +
-          `&maptype=${mapType}` +
-          `&markers=color:${userMarkerColor}|${userLocation.latitude},${userLocation.longitude}` +
-          `&key=${googleMapsApiKey}`
-      );
-      searchGasStations(userLocation);
-    }
+    updateHtmlMap();
   }, [userLocation]);
 
   const verifyPermission = async () => {
@@ -80,12 +49,14 @@ export default function NearbyGasStations() {
   };
 
   const getLocation = async () => {
+    setLoading(true);
     try {
       const hasPermission = await verifyPermission();
       if (!hasPermission) {
         Alert.alert(
           "Permission must be granted to locate nearby gas stations."
         );
+        setLoading(false);
         return;
       }
       const currentLocation = await Location.getCurrentPositionAsync();
@@ -95,38 +66,72 @@ export default function NearbyGasStations() {
       });
     } catch (error) {
       console.log("Error getting user location: ", error);
+      setLoading(false);
     }
+    setLoading(false);
   };
 
   const getLocationHandler = () => {
-    console.log("Get Location Pressed");
     getLocation();
   };
 
-  const searchGasStations = async (location) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=5000&type=gas_station&key=${googleMapsApiKey}`
-      );
-      const data = await response.json();
-      setGasStations(data.results);
-    } catch (error) {
-      console.error("Error searching gas stations:", error);
+  const updateHtmlMap = () => {
+    const uri =
+      `https://www.google.com/maps/embed/v1/search?` +
+      `q=Gas%20Station` +
+      `&key=${googleMapsApiKey}` +
+      `&center=${userLocation.latitude}%2C${userLocation.longitude}` +
+      `&zoom=12`;
+    const htmlMap = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Google Maps Embed</title>
+    </head>  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* Optional: Prevents scrollbars */
     }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+    <body>
+      <iframe
+        width="100%"
+        height="100%"
+        frameborder="0"
+        style="border:0"
+        src=${uri}
+        allowfullscreen
+      ></iframe>
+    </body>
+    </html>`;
+    setHtmlMap(htmlMap);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {userLocation && (
-        <Text>
-          Location: {userLocation.latitude}, {userLocation.longitude}
-        </Text>
-      )}
-      {userLocation && <Image source={{ uri: mapURI }} style={styles.image} />}
-      {gasStations.map((station) => (
-        <Text key={station.place_id}>{station.name}</Text>
-      ))}
       <GetLocationButton locationReturnHandler={getLocationHandler} />
+      {htmlMap && <WebView source={{ html: htmlMap }} style={styles.webView} />}
+      {/* Add spinner icon in the middle of the screen when loading */}
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator
+          size="large"
+          animating={loading}
+          color={colors.primaryDark}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -134,10 +139,18 @@ export default function NearbyGasStations() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  image: {
     width: "100%",
     height: "100%",
+    backgroundColor: "#ffffff",
+  },
+  webView: {
+    flexGrow: 1,
+    width: "100%",
+    height: "100%",
+  },
+  activityIndicatorContainer: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
   },
 });

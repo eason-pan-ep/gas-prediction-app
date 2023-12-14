@@ -31,8 +31,10 @@ export default GetLocationButton;
 
 const styles = StyleSheet.create({
   container: {
-    bottom: "8%",
-    right: "10%",
+    bottom: 120,
+    right: 5,
+    width: 60,
+    height: 60,
     flex: 0,
     zIndex: 1,
     position: "absolute",
