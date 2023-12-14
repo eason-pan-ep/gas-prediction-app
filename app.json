@@ -28,7 +28,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Octan Oracle would like to use your location to provide you with the most accurate gas price predictions."
+          "locationAlwaysAndWhenInUsePermission": "Octane Oracle would like to use your location to provide you with the most accurate gas price predictions."
         }
       ],
       [
