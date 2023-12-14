@@ -21,11 +21,11 @@ Macarious Kin Fung Hui, Yuchen Pan (Eason)
 - Read, parse and store user's location data (Google Map API to be implemented in Iteration #3)
 - UI design (update mock screens, to be fully implemented in Iteration 3)
 
-## Iteration III - *Prediction Feature and Polish*
+## Iteration III - *Complete Prediction Feature, Remaining Device Feature and Polish*
 - OpenAI API & LangChain Integration
-- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
-- Production UI integration
-- Polish interactions 
+- Notification feature to remind user to fill up gas
+- Google Map APIs and Gas Station Search
+- Enhance UI design
 - Test and compile (pack)
   
 ## Iteration I
@@ -154,7 +154,30 @@ Photos are saved in Firestore Storage successfully:
 
 ## Iteration III - Prediction Feature and Polish
 - OpenAI API & LangChain Integration
-- Google Map APIs (the Near Gas Station part, and prep for later prediction use)
-- Production UI integration
-- Polish interactions 
+- Notification feature to remind user to fill up gas
+- Google Map APIs and Gas Station Search
+- Enhance UI design
 - Test and compile (pack)
+
+#### OpenAI API & LangChain Integration
+- Gas prediction feature has been implemented
+- Current only limited to the Metro Vancouver area
+- Add loading animations to notify user prediction is loading
+- Utilize device location (with permission) to retrive Gas Prediction in the area
+
+#### Notification feature to remind user to fill up gas
+- Implement notification icons next to each prediction entry
+- On iOS devices, a modal pop-up allows users to choose the time of day to set off the reminder
+- On Android devices, the default time is set to 9:00 am on the day of choice
+- Ensure user's permission is properly requested
+
+#### Google Map APIs and Gas Station Search
+- Permission is asked / verified when first navigated to the Nearby Gas Stations page
+- User's location is automatically obtained at first render (after permission is granted)
+- It automatically searches for gas stations near the user at first render (after user's location has been determined)
+- The locate user button refreshes the user's location (and thus re-trigger the nearby gas station search)
+
+#### Enhance UI Design
+- Use a modal instead of an actual screen to show Terms and Conditions
+- Add spinners for longer loading processes (such as retrieveing device location)
+- Polish overall UI design
