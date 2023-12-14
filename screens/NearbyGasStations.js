@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Alert,
   View,
+  Text,
 } from "react-native";
 import * as Location from "expo-location";
 import { googleMapsApiKey } from "@env";
@@ -125,16 +126,18 @@ export default function NearbyGasStations() {
   return (
     <SafeAreaView style={styles.container}>
       <GetLocationButton locationReturnHandler={getLocationHandler} />
-      <View style={styles.webViewContainer}>
-        {htmlMap && (
-          <WebView
-            originWhitelist={["*"]}
-            source={{ html: htmlMap }}
-            style={styles.webView}
-            key={htmlMapKey}
-          />
-        )}
-      </View>
+      {status?.granted && (
+        <View style={styles.webViewContainer}>
+          {htmlMap && (
+            <WebView
+              originWhitelist={["*"]}
+              source={{ html: htmlMap }}
+              style={styles.webView}
+              key={htmlMapKey}
+            />
+          )}
+        </View>
+      )}
       <View style={styles.activityIndicatorContainer}>
         <ActivityIndicator
           size="large"
@@ -142,6 +145,14 @@ export default function NearbyGasStations() {
           color={colors.primaryDark}
         />
       </View>
+      {!status?.granted && (
+        <View style={styles.noPermissionView}>
+          <Text>{"Location permission is not granted."}</Text>
+          <Text>
+            {"Click on the Locate User Button\nin the bottom-right corner."}
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -171,5 +182,10 @@ const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: [{ translateX: -12 }, { translateY: -12 }],
+  },
+  noPermissionView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
