@@ -8,6 +8,7 @@ const backendKEY = GAS_APP_BACKEND_KEY;
 export const getCity = async (coordinate) => {
     const latitudeStr = coordinate.latitude.toString();
     const longitudeStr = coordinate.longitude.toString();
+    const testURL = `http://127.0.0.1:5000/city?latitude=49.2827&longitude=123.1207&GAS_APP_BACKEND_KEY=${backendKEY}`;
     const requestURL = `https://gas-prediction-back-end-a68f10a4a29c.herokuapp.com/city?latitude=${latitudeStr}&longitude=${longitudeStr}&GAS_APP_BACKEND_KEY=${backendKEY}`;
     try{
         const response = await fetch(requestURL,{
@@ -20,12 +21,13 @@ export const getCity = async (coordinate) => {
         return data;
     }catch(error){
         console.log("Error getting city from backend: ", error);
+        
     }
 }
 
 // This function calls the backend API to get the gas prices for 2 days with regular, premium, and diesel prices.
 export const getGasPrices = async (city) => {
-    //const testURL = `http://127.0.0.1:5000/test?city=${city}&GAS_APP_BACKEND_KEY=${backendKEY}`;
+    const testURL = `http://127.0.0.1:5000/price?city=Vancouver, BC&GAS_APP_BACKEND_KEY=${backendKEY}`;
     const requestURL = `https://gas-prediction-back-end-a68f10a4a29c.herokuapp.com/price?city=${city}&GAS_APP_BACKEND_KEY=${backendKEY}`;
 
     try{
@@ -37,6 +39,7 @@ export const getGasPrices = async (city) => {
             },
         });
         const data = await response.json();
+        
 
         // get the prices from the data
         let prices = [];

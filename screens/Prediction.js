@@ -47,6 +47,11 @@ export default function Prediction({ navigation, route }) {
       try {
         //get user's city
         const city = route.params.city;
+        if(!city.includes("Vancouver")){
+          Alert.alert("Prediction is only available for Vancouver, BC");
+          navigation.goBack();
+          return;
+        }
 
         const q = query(
           collection(database, "predictionData"),
