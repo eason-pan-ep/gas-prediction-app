@@ -11,13 +11,14 @@ import { signOut } from "firebase/auth";
 import LargePressable from "../components/LargePressable";
 import CustomPressable from "../components/CustomPressable";
 import { colors } from "../styles/colors";
-import { fontSizes } from "../styles/fontSizes";
+
 
 export default function Home({ navigation }) {
   // This function is called when the Predict Gas Prices button is pressed.
   // This function should navigate to the Prediction screen.
-  function onPressPredictGasPrices() {
+  async function onPressPredictGasPrices() {
     navigation.navigate("Prediction");
+
   }
 
   // This function is called when the Add Fueling Entry button is pressed.

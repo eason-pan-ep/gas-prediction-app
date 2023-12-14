@@ -7,51 +7,86 @@
 // // 2. Done - navigates back to the Home screen.
 // // 3. Clear Cache - clears the cache of the prediction data.
 
-import {
-  Text,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, StyleSheet, Alert, ActivityIndicator, View, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getDateList, getSuggestedDate } from "../utility/predictionUtil";
 import { auth, database } from "../firebase/firebaseSetup";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 import PredictionItem from "../components/PredictionItem";
 import CustomPressable from "../components/CustomPressable";
 import SubtlePressable from "../components/SubtlePressable";
-import {
-  generateRandomLocation,
-  generateDummyPrediction,
-} from "../utility/randomDummyPredictionData";
-import {
-  writeToPredictionData,
-  clearUserPredictionCache,
-} from "../firebase/firestoreHelper";
+import { getGasPrices, getCity } from "../utility/predictionUtil";
+import { writeToPredictionData, clearUserPredictionCache } from "../firebase/firestoreHelper";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
+import * as Location from "expo-location";
+
+
+
 export default function Prediction({ navigation }) {
-  const [suggestedDate, setSuggestedDate] = useState("");
+  const [status, requestPermission] = Location.useForegroundPermissions();
   const [predictions, setPredictions] = useState([]);
-  const [city, setCity] = useState(generateRandomLocation());
-  const fiveDays = getDateList();
+  const [city, setCity] = useState("");
+  const TODAY = new Date();
+
+  // This function will first ask for permission to access the device's location
+  // and return the location if permission is granted
+  const verifyPermission = async () => {
+    if(!status){
+      const response = await requestPermission();
+      if(!response){
+        return false;
+      }
+      return response.granted;
+    }
+    return status.granted;
+  };
+
+
+  const getLocation = async () => {
+    try{
+      const hasPermission = await verifyPermission();
+      if(!hasPermission){
+        Alert.alert("Permission to access location was denied");
+        navigation.goBack();
+        return;
+      }
+      // get the current location
+      const location = await Location.getCurrentPositionAsync();
+      return location;
+      
+    }catch(error){
+      console.log("Error getting user location(prediction): ", error);
+    }
+  }
+
 
   useEffect(() => {
-    //get today's date
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${
-      today.getMonth() + 1
-    }-${today.getDate()}`;
+    //get today's date string
+    const todayStr = `${TODAY.getFullYear()}-${
+      TODAY.getMonth() + 1
+    }-${TODAY.getDate()}`;
 
     // try to get docs from predictionData collection that matches today's date and user's city
     // if there is no match, get new prediction data from the APIs
     // otherwise, set the state variable with the data from the database
     const getPrediction = async () => {
       try {
+        //get user's city
+        const location = await getLocation();
+        const coordinate = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }
+        const findCity = await getCity(coordinate);
+        
+        if(!findCity.includes("Vancouver")){
+          Alert.alert("Prediction is only available for Vancouver, BC");
+          navigation.goBack();
+          return;
+        }
+        setCity(findCity);
         const q = query(
           collection(database, "predictionData"),
           where("user", "==", auth.currentUser.uid),
@@ -61,17 +96,19 @@ export default function Prediction({ navigation }) {
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
           //no match found => get new prediction data from the APIs
-          console.log("no match found");
-          const newPredictionData = generateDummyPrediction(city);
+          console.log("no match found in firestore");
+          const newPredictionData = await getGasPrices(city);
           setPredictions(newPredictionData.prices);
-          setSuggestedDate(getSuggestedDate(newPredictionData.prices));
-          writeToPredictionData({ ...newPredictionData, location: city });
+          writeToPredictionData(newPredictionData);
         } else {
           console.log("match found");
           querySnapshot.forEach((doc) => {
             const predictionData = doc.data();
-            setPredictions(predictionData.prices);
-            setSuggestedDate(getSuggestedDate(predictionData.prices));
+            let data=[];
+            for(object in predictionData.prices){
+              data.push(predictionData.prices[object])
+            }
+            setPredictions(data);
           });
         }
       } catch (error) {
@@ -112,19 +149,21 @@ export default function Prediction({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.predictionContainer}>
         <Text style={styles.suggestionText}>Prediction for city of</Text>
-        <Text style={styles.headerText}>{city}</Text>
+        {city&&<Text style={styles.headerText}>{city}</Text>}
         {predictions.length === 0 ? null : (
           <>
-            {[0, 1, 2, 3, 4].map((index) => (
+            {[0, 1].map((index) => (
               <PredictionItem
                 key={index}
-                date={fiveDays[index]}
-                price={`$ ${predictions[index].toFixed(2)} / L`}
+                date={`${TODAY.getFullYear()}-${TODAY.getMonth() + 1}-${TODAY.getDate() + index}`}
+                regular={predictions[index].regular}
+                premium={predictions[index].premium}
+                diesel={predictions[index].diesel}
               />
             ))}
           </>
         )}
-        {suggestedDate === "" ? (
+        {predictions.length === 0 ? (
           <>
             <Text style={styles.suggestionText}>
               Getting Predictions
@@ -133,13 +172,7 @@ export default function Prediction({ navigation }) {
             </Text>
             <ActivityIndicator size="large" color={colors.primary} />
           </>
-        ) : (
-          <Text style={styles.suggestionText}>
-            Fill up on{" "}
-            <Text style={{ fontWeight: "bold" }}>{suggestedDate}</Text> {"\n"}{" "}
-            will potentially saves your money
-          </Text>
-        )}
+        ) : null}
       </View>
       <View style={styles.buttonContainer}>
         <CustomPressable
@@ -186,6 +219,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   suggestionText: {
+    marginTop: '2.5%',
     textAlign: "center",
     fontSize: fontSizes.normal,
     color: colors.infoDark,

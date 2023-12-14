@@ -23,6 +23,7 @@ const GetLocationButton = ({ locationReturnHandler }) => {
         color={colors.primaryDark}
         style={styles.icon}
       />
+
     </Pressable>
   );
 };

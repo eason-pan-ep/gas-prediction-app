@@ -16,14 +16,42 @@ import SetNotificationPressable from "./SetNotificationPressable";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
-const PredictionItem = ({ date, price }) => {
+const PredictionItem = ({ date, regular, premium, diesel }) => {
+  // check if all the prices are available
+  // if not, display N/A
+  if(!isFinite(Number(regular))){
+    regular = "N/A";
+  }
+  if(!isFinite(Number(premium))){
+    premium = "N/A";
+  }
+  if(!isFinite(Number(diesel))){
+    diesel = "N/A";
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.containerRow}>
         <IndividualItemContainer>
           {/* display the prediction data */}
-          <Text style={styles.infoText}>{date}</Text>
-          <Text style={styles.infoText}>{price}</Text>
+          <View>
+            <Text style={styles.dateText}>{date}</Text>
+          </View>
+          <View style={styles.pricesContainer}>
+            <View style={styles.singlePriceContainer}>
+              <Text style={styles.priceText} >{regular}</Text>
+              <Text style={styles.infoText}>Regular</Text>
+            </View>
+            <View style={styles.singlePriceContainer}>
+              <Text style={styles.priceText} >{premium}</Text>
+              <Text style={styles.infoText}>Premium</Text>
+            </View>
+            <View style={styles.singlePriceContainer} >
+              <Text style={styles.priceText} >{diesel}</Text>
+              <Text style={styles.infoText}>Diesel</Text>
+            </View>
+          </View>
+          
         </IndividualItemContainer>
         {/* set alert button */}
         <View style={styles.notificationPressableContainer}>
@@ -49,10 +77,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  pricesContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  singlePriceContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dateText: {
+    fontSize: fontSizes.large,
+    color: colors.infoDark,
+    fontWeight: "bold",
+  },
   infoText: {
     fontSize: fontSizes.normal,
     color: colors.infoDark,
+    
+  },
+  priceText: {
+    fontSize: fontSizes.extraLarge,
+    marginBottom: 5,
     fontWeight: "bold",
+
   },
   notificationPressableContainer: {
     flexBasis: 40,

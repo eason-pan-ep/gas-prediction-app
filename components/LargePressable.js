@@ -10,7 +10,11 @@ import React from "react";
 import { colors } from "../styles/colors";
 import { fontSizes } from "../styles/fontSizes";
 
+
 export default function LargePressable({ title, onPress, style }) {
+
+  
+
   return (
     <Pressable
       style={({ pressed }) => [
