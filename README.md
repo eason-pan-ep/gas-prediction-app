@@ -13,6 +13,7 @@ Macarious Kin Fung Hui, Yuchen Pan (Eason)
 ## Video Walk Through
 iOS: https://youtu.be/ysbWcjvjTF0
 Android: https://youtu.be/_ejNnFcb6xQ
+<br>LLM part demo: https://youtu.be/oa0zKuImNdo
 
 ## Summary
 ### Iteration I - *Device Features and UI Design*
